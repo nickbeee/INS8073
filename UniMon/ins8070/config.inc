@@ -1,0 +1,1 @@
+/home/nick/unimon-20221220/ins8070/config/config.8073_soft
