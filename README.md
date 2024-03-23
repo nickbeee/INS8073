@@ -6,6 +6,7 @@ This is based on an [original article](https://hb9afo.ch/histoire/1982-12_System
 
 I have now modified my build to include 32k of RAM from 0A00h to 7FFFh and a monitor EPROM at 8800h.
 The monitor is the [Universal Monitor](UniMon) from electrelic.com.
+
 My build notes are detailed in [INS8073_SBC_notes.pdf](INS8073_SBC_notes.pdf)
 
 Board should look like this:
