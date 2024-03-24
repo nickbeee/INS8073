@@ -1,0 +1,1688 @@
+       0 :                            cpu   8070
+       0 :                            org   X'0000
+       0 : 00                         nop
+       1 : 24 09 00                   jmp   X'000A
+       4 : 24 B9 08                   jmp   X'08BA
+       7 : 24 BE 08                   jmp   X'08BF
+       A : 84 00 80                   ld    ea, =X'8000
+       D : 8D D4                      st    ea, X'FFD4
+       F : 84 00 10                   ld    ea, =X'1000
+      12 : 46                         ld    p2, ea
+      13 : 20 72 00                   jsr   X'0073
+      16 : 7C FB                      bnz   X'0013
+      18 : 32                         ld    ea, p2
+      19 : BC 01 00                   sub   ea, =1
+      1C : 7C F5                      bnz   X'0013
+      1E : 74 20                      bra   X'0040
+      20 : 3B 06                      or    s, =6
+ins8073_basic.hex: error: Unknown instruction
+      22 : EE
+      23 : 06                         ld    a, s
+      24 : 46                         ld    p2, ea
+      25 : 08                         push  ea
+ins8073_basic.hex: error: Unknown instruction
+      26 : 79
+      27 : 06                         ld    a, s
+      28 : 39 08                      and   s, =8
+ins8073_basic.hex: error: Unknown instruction
+      2A : 49
+      2B : 08                         push  ea
+ins8073_basic.hex: error: Unknown instruction
+      2C : 02
+ins8073_basic.hex: error: Unknown instruction
+      2D : 02
+      2E : 82 09                      ld    ea, 9,p2
+ins8073_basic.hex: error: Unknown instruction
+      30 : 7D
+      31 : 09                         ld    t, ea
+      32 : 4C                         xch   ea, pc
+ins8073_basic.hex: error: Unknown instruction
+      33 : 05
+      34 : 01                         xch   a, e
+      35 : 08                         push  ea
+      36 : 13                         call  3
+      37 : 06                         ld    a, s
+ins8073_basic.hex: error: Unknown instruction
+      38 : 5D
+ins8073_basic.hex: error: Unknown instruction
+      39 : 05
+ins8073_basic.hex: error: Unknown instruction
+      3A : 94
+ins8073_basic.hex: error: Unknown instruction
+      3B : 05
+      3C : 3E                         rr    a
+ins8073_basic.hex: error: Unknown instruction
+      3D : 05
+ins8073_basic.hex: error: Unknown instruction
+      3E : CC
+      3F : 08                         push  ea
+      40 : 8D C6                      st    ea, X'FFC6
+      42 : B4 00 01                   add   ea, =X'0100
+      45 : 8D D2                      st    ea, X'FFD2
+      47 : 45                         ld    sp, ea
+      48 : 20 72 00                   jsr   X'0073
+      4B : 6C FB                      bz    X'0048
+      4D : C6 FE                      ld    a, @-2,p2
+      4F : 32                         ld    ea, p2
+      50 : 8D D8                      st    ea, X'FFD8
+      52 : 85 D4                      ld    ea, X'FFD4
+      54 : 46                         ld    p2, ea
+      55 : 20 72 00                   jsr   X'0073
+      58 : 6C 03                      bz    X'005D
+      5A : 24 D9 01                   jmp   X'01DA
+      5D : 85 D2                      ld    ea, X'FFD2
+      5F : BD D4                      sub   ea, X'FFD4
+      61 : 06                         ld    a, s
+      62 : 64 04                      bp    X'0068
+      64 : 85 D2                      ld    ea, X'FFD2
+      66 : 8D D4                      st    ea, X'FFD4
+      68 : C5 C5                      ld    a, X'FFC5
+      6A : E4 52                      xor   a, =X'52
+      6C : 6C 2C                      bz    X'009A
+      6E : 20 C0 05                   jsr   X'05C1
+      71 : 74 1E                      bra   X'0091
+      73 : C6 01                      ld    a, @1,p2
+      75 : 48                         ld    e, a
+      76 : E4 FF                      xor   a, =X'FF
+      78 : CA FF                      st    a, -1,p2
+      7A : E2 FF                      xor   a, -1,p2
+      7C : 01                         xch   a, e
+      7D : CA FF                      st    a, -1,p2
+      7F : E2 FF                      xor   a, -1,p2
+      81 : 58                         or    a, e
+      82 : 5C                         ret
+      83 : 20 C0 05                   jsr   X'05C1
+      86 : C2 00                      ld    a, 0,p2
+      88 : E4 0D                      xor   a, =13
+      8A : 6C 05                      bz    X'0091
+      8C : 10                         call  0
+      8D : 15                         call  5
+      8E : 24 0C 00                   jmp   X'000D
+      91 : 85 D4                      ld    ea, X'FFD4
+      93 : 8D D6                      st    ea, X'FFD6
+      95 : 46                         ld    p2, ea
+      96 : C4 7F                      ld    a, =X'7F
+      98 : CA 00                      st    a, 0,p2
+      9A : 85 D2                      ld    ea, X'FFD2
+      9C : 45                         ld    sp, ea
+      9D : 85 C6                      ld    ea, X'FFC6
+      9F : B4 34 00                   add   ea, =X'0034
+      A2 : 8D C8                      st    ea, X'FFC8
+      A4 : 47                         ld    p3, ea
+      A5 : 20 E4 09                   jsr   X'09E5
+      A8 : 18                         call  8
+      A9 : C5 C2                      ld    a, X'FFC2
+      AB : 6C 0C                      bz    X'00B9
+      AD : 32                         ld    ea, p2
+      AE : 8D EE                      st    ea, X'FFEE
+      B0 : 22 11 09                   pli   p2, =X'0911
+      B3 : 1E                         call  14
+      B4 : 5E                         pop   p2
+      B5 : 20 01 09                   jsr   X'0902
+      B8 : 18                         call  8
+      B9 : 85 C8                      ld    ea, X'FFC8
+      BB : 47                         ld    p3, ea
+      BC : 84 00 00                   ld    ea, =0
+      BF : 8D EA                      st    ea, X'FFEA
+      C1 : CD C2                      st    a, X'FFC2
+      C3 : C4 01                      ld    a, =1
+      C5 : 8D E8                      st    ea, X'FFE8
+      C7 : 20 4C 08                   jsr   X'084D
+      CA : 19                         call  9
+      CB : 1D                         call  13
+      CC : 85 85                      ld    ea, X'FF85
+      CE : D4 BD                      and   a, =X'BD
+ins8073_basic.hex: error: Unknown instruction
+      D0 : E8
+      D1 : BD D6                      sub   ea, X'FFD6
+      D3 : 06                         ld    a, s
+      D4 : 64 02                      bp    X'00D8
+      D6 : 1F                         call  15
+      D7 : 01                         xch   a, e
+      D8 : 32                         ld    ea, p2
+      D9 : 8D F0                      st    ea, X'FFF0
+      DB : 20 6D 01                   jsr   X'016E
+      DE : 7C 1B                      bnz   X'00FB
+      E0 : 56                         push  p2
+      E1 : 20 91 01                   jsr   X'0192
+      E4 : 81 00                      ld    ea, 0,sp
+      E6 : 47                         ld    p3, ea
+      E7 : 32                         ld    ea, p2
+      E8 : 1A                         call  10
+      E9 : 08                         push  ea
+      EA : B5 E8                      add   ea, X'FFE8
+      EC : B5 D6                      add   ea, X'FFD6
+      EE : 8D FE                      st    ea, X'FFFE
+      F0 : 3A                         pop   ea
+      F1 : B1 00                      add   ea, 0,sp
+      F3 : B5 D6                      add   ea, X'FFD6
+      F5 : 8D D6                      st    ea, X'FFD6
+      F7 : 20 5C 01                   jsr   X'015D
+      FA : 5E                         pop   p2
+      FB : 32                         ld    ea, p2
+      FC : 47                         ld    p3, ea
+      FD : 85 F0                      ld    ea, X'FFF0
+      FF : 46                         ld    p2, ea
+     100 : 19                         call  9
+     101 : E4 0D                      xor   a, =13
+     103 : 6C B4                      bz    X'00B9
+     105 : 85 D0                      ld    ea, X'FFD0
+     107 : 46                         ld    p2, ea
+     108 : 19                         call  9
+     109 : 32                         ld    ea, p2
+     10A : 8D F6                      st    ea, X'FFF6
+     10C : 20 91 01                   jsr   X'0192
+     10F : 32                         ld    ea, p2
+     110 : BD F6                      sub   ea, X'FFF6
+     112 : 8D FE                      st    ea, X'FFFE
+     114 : B5 D6                      add   ea, X'FFD6
+     116 : BD D8                      sub   ea, X'FFD8
+     118 : BD E8                      sub   ea, X'FFE8
+     11A : 01                         xch   a, e
+     11B : 64 3E                      bp    X'015B
+     11D : 57                         push  p3
+     11E : 85 D6                      ld    ea, X'FFD6
+     120 : 46                         ld    p2, ea
+     121 : 33                         ld    ea, p3
+     122 : BD D6                      sub   ea, X'FFD6
+     124 : 1A                         call  10
+     125 : 8D FB                      st    ea, X'FFFB
+     127 : 58                         or    a, e
+     128 : 0A                         push  a
+     129 : 85 D6                      ld    ea, X'FFD6
+     12B : B5 FE                      add   ea, X'FFFE
+     12D : 8D D6                      st    ea, X'FFD6
+     12F : 47                         ld    p3, ea
+     130 : C2 00                      ld    a, 0,p2
+     132 : CB 00                      st    a, 0,p3
+     134 : 38                         pop   a
+     135 : 6C 10                      bz    X'0147
+     137 : C6 FF                      ld    a, @-1,p2
+     139 : CF FF                      st    a, @-1,p3
+     13B : 9D FB                      dld   a, X'FFFB
+     13D : 7C F8                      bnz   X'0137
+     13F : C5 FC                      ld    a, X'FFFC
+     141 : 6C 04                      bz    X'0147
+     143 : 9D FC                      dld   a, X'FFFC
+     145 : 74 F0                      bra   X'0137
+     147 : 5F                         pop   p3
+     148 : 85 F6                      ld    ea, X'FFF6
+     14A : 46                         ld    p2, ea
+     14B : 20 5C 01                   jsr   X'015D
+     14E : 24 B8 00                   jmp   X'00B9
+     151 : C2 00                      ld    a, 0,p2
+     153 : E4 0D                      xor   a, =13
+     155 : 6C F7                      bz    X'014E
+     157 : 23 98 01                   pli   p3, =X'0198
+     15A : 1B                         call  11
+     15B : 1F                         call  15
+     15C : 01                         xch   a, e
+     15D : C6 01                      ld    a, @1,p2
+     15F : CF 01                      st    a, @1,p3
+     161 : 9D FE                      dld   a, X'FFFE
+     163 : 7C F8                      bnz   X'015D
+     165 : C5 FF                      ld    a, X'FFFF
+     167 : 6C 04                      bz    X'016D
+     169 : 9D FF                      dld   a, X'FFFF
+     16B : 74 F0                      bra   X'015D
+     16D : 5C                         ret
+     16E : 85 D4                      ld    ea, X'FFD4
+     170 : 46                         ld    p2, ea
+     171 : 32                         ld    ea, p2
+     172 : 8D FB                      st    ea, X'FFFB
+     174 : 19                         call  9
+     175 : 1D                         call  13
+     176 : 18                         call  8
+     177 : 15                         call  5
+     178 : BB FE                      sub   ea, -2,p3
+     17A : 01                         xch   a, e
+     17B : 64 05                      bp    X'0182
+     17D : 20 91 01                   jsr   X'0192
+     180 : 74 EF                      bra   X'0171
+     182 : 58                         or    a, e
+     183 : 6C 02                      bz    X'0187
+     185 : C4 01                      ld    a, =1
+     187 : 0A                         push  a
+     188 : 15                         call  5
+     189 : 85 FB                      ld    ea, X'FFFB
+     18B : 46                         ld    p2, ea
+     18C : 38                         pop   a
+     18D : 5C                         ret
+     18E : C4 FF                      ld    a, =X'FF
+     190 : 74 F5                      bra   X'0187
+     192 : C4 0D                      ld    a, =13
+     194 : 2E                         ssm   p2
+     195 : 74 17                      bra   X'01AE
+     197 : 5C                         ret
+     198 : 4C                         xch   ea, pc
+ins8073_basic.hex: error: Unknown instruction
+     199 : 49
+ins8073_basic.hex: error: Unknown instruction
+     19A : 53
+     19B : 54                         push  pc
+     19C : 93 4E                      ild   a, 78,p3
+     19E : 45                         ld    sp, ea
+     19F : 57                         push  p3
+     1A0 : 8A 52                      st    ea, 82,p2
+ins8073_basic.hex: error: Unknown instruction
+     1A2 : 55
+     1A3 : 4E                         xch   ea, p2
+     1A4 : B5 43                      add   ea, X'FF43
+     1A6 : 4F                         xch   ea, p3
+     1A7 : 4E                         xch   ea, p2
+     1A8 : 54                         push  pc
+     1A9 : A7 D2                      ld    t, @-46,p3
+     1AB : 24 82 00                   jmp   X'0083
+     1AE : 1F                         call  15
+ins8073_basic.hex: error: Unknown instruction
+     1AF : 03
+     1B0 : 1D                         call  13
+ins8073_basic.hex: error: Unknown instruction
+     1B1 : 03
+     1B2 : 74 03                      bra   X'01B7
+     1B4 : 85 EA                      ld    ea, X'FFEA
+     1B6 : 14                         call  4
+     1B7 : 20 6D 01                   jsr   X'016E
+     1BA : 19                         call  9
+     1BB : 56                         push  p2
+     1BC : 1D                         call  13
+     1BD : 0A                         push  a
+     1BE : 15                         call  5
+     1BF : 5E                         pop   p2
+     1C0 : 1E                         call  14
+     1C1 : 18                         call  8
+     1C2 : 20 1D 09                   jsr   X'091E
+     1C5 : 74 F3                      bra   X'01BA
+     1C7 : 5E                         pop   p2
+     1C8 : 24 99 00                   jmp   X'009A
+     1CB : 54                         push  pc
+     1CC : 48                         ld    e, a
+     1CD : 45                         ld    sp, ea
+     1CE : 4E                         xch   ea, p2
+ins8073_basic.hex: error: Unknown instruction
+     1CF : AD
+ins8073_basic.hex: error: Unknown instruction
+     1D0 : AC
+     1D1 : 85 EE                      ld    ea, X'FFEE
+     1D3 : 46                         ld    p2, ea
+     1D4 : C4 01                      ld    a, =1
+     1D6 : CD C2                      st    a, X'FFC2
+     1D8 : 74 37                      bra   X'0211
+     1DA : 20 C0 05                   jsr   X'05C1
+     1DD : C4 01                      ld    a, =1
+     1DF : CD C2                      st    a, X'FFC2
+     1E1 : 85 D4                      ld    ea, X'FFD4
+     1E3 : 46                         ld    p2, ea
+     1E4 : 74 04                      bra   X'01EA
+     1E6 : C5 C2                      ld    a, X'FFC2
+     1E8 : 6C DE                      bz    X'01C8
+     1EA : 85 EA                      ld    ea, X'FFEA
+     1EC : 14                         call  4
+     1ED : 20 70 01                   jsr   X'0171
+     1F0 : 64 06                      bp    X'01F8
+     1F2 : C4 00                      ld    a, =0
+     1F4 : CD C2                      st    a, X'FFC2
+     1F6 : 74 D0                      bra   X'01C8
+     1F8 : 1D                         call  13
+     1F9 : 08                         push  ea
+     1FA : 15                         call  5
+     1FB : 8D C3                      st    ea, X'FFC3
+     1FD : 23 2E 02                   pli   p3, =X'022E
+     200 : 1B                         call  11
+     201 : 1F                         call  15
+ins8073_basic.hex: error: Unknown instruction
+     202 : 04
+     203 : 3A                         pop   ea
+     204 : C5 E7                      ld    a, X'FFE7
+     206 : 7C 09                      bnz   X'0211
+     208 : C5 C2                      ld    a, X'FFC2
+     20A : 6C 05                      bz    X'0211
+     20C : 85 E0                      ld    ea, X'FFE0
+     20E : 58                         or    a, e
+     20F : 7C 14                      bnz   X'0225
+     211 : C4 00                      ld    a, =0
+     213 : CD E7                      st    a, X'FFE7
+     215 : 20 1D 09                   jsr   X'091E
+     218 : 1C                         call  12
+     219 : 3A                         pop   ea
+ins8073_basic.hex: error: Unknown instruction
+     21A : 03
+     21B : 74 E0                      bra   X'01FD
+     21D : C6 01                      ld    a, @1,p2
+     21F : E4 0D                      xor   a, =13
+     221 : 7C 8B                      bnz   X'01AE
+     223 : 74 C1                      bra   X'01E6
+     225 : 85 E0                      ld    ea, X'FFE0
+     227 : 14                         call  4
+     228 : 85 EA                      ld    ea, X'FFEA
+     22A : 8D E0                      st    ea, X'FFE0
+     22C : 74 49                      bra   X'0277
+     22E : 4C                         xch   ea, pc
+     22F : 45                         ld    sp, ea
+     230 : 54                         push  pc
+     231 : A6 49                      ld    t, @73,p2
+     233 : 46                         ld    p2, ea
+     234 : F3 4C                      add   a, 76,p3
+ins8073_basic.hex: error: Unknown instruction
+     236 : 49
+     237 : 4E                         xch   ea, p2
+ins8073_basic.hex: error: Unknown instruction
+     238 : 4B
+     239 : F7 4E                      add   a, @78,p3
+     23B : 45                         ld    sp, ea
+     23C : 58                         or    a, e
+     23D : 54                         push  pc
+ins8073_basic.hex: error: Unknown instruction
+     23E : 9C
+ins8073_basic.hex: error: Unknown instruction
+     23F : 55
+     240 : 4E                         xch   ea, p2
+     241 : 54                         push  pc
+ins8073_basic.hex: error: Unknown instruction
+     242 : 49
+     243 : 4C                         xch   ea, pc
+     244 : DB 47                      or    a, 71,p3
+     246 : 4F                         xch   ea, p3
+     247 : 96 52                      ild   a, @82,p2
+     249 : 45                         ld    sp, ea
+     24A : 54                         push  pc
+ins8073_basic.hex: error: Unknown instruction
+     24B : 55
+ins8073_basic.hex: error: Unknown instruction
+     24C : 52
+     24D : 4E                         xch   ea, p2
+     24E : BD 52                      sub   ea, X'FF52
+     250 : 45                         ld    sp, ea
+     251 : 4D                         xch   ea, sp
+     252 : CF 80                      st    a, @-128,p3
+     254 : 23 BF 02                   pli   p3, =X'02BF
+     257 : 1B                         call  11
+     258 : 24 5A 04                   jmp   X'045B
+     25B : 24 68 03                   jmp   X'0369
+     25E : 23 62 02                   pli   p3, =X'0262
+     261 : 1B                         call  11
+     262 : 54                         push  pc
+     263 : 4F                         xch   ea, p3
+     264 : 85 53                      ld    ea, X'FF53
+ins8073_basic.hex: error: Unknown instruction
+     266 : 55
+ins8073_basic.hex: error: Unknown instruction
+     267 : 42
+     268 : 8D 80                      st    ea, X'FF80
+     26A : 10                         call  0
+     26B : C4 01                      ld    a, =1
+     26D : CD C2                      st    a, X'FFC2
+     26F : 20 6D 01                   jsr   X'016E
+     272 : 6C 84                      bz    X'01F8
+     274 : 1F                         call  15
+     275 : 07                         ld    s, a
+     276 : 10                         call  0
+     277 : 85 DE                      ld    ea, X'FFDE
+     279 : 57                         push  p3
+     27A : 47                         ld    p3, ea
+     27B : 85 CC                      ld    ea, X'FFCC
+     27D : CD F6                      st    a, X'FFF6
+     27F : 33                         ld    ea, p3
+     280 : 20 C0 03                   jsr   X'03C1
+     283 : 32                         ld    ea, p2
+     284 : 8F 02                      st    ea, @2,p3
+     286 : 33                         ld    ea, p3
+     287 : 8D DE                      st    ea, X'FFDE
+     289 : 5F                         pop   p3
+     28A : 74 DF                      bra   X'026B
+     28C : 85 DE                      ld    ea, X'FFDE
+     28E : BD CA                      sub   ea, X'FFCA
+     290 : 6C 0C                      bz    X'029E
+     292 : 85 DE                      ld    ea, X'FFDE
+     294 : BC 02 00                   sub   ea, =2
+     297 : 8D DE                      st    ea, X'FFDE
+     299 : 46                         ld    p2, ea
+     29A : 82 00                      ld    ea, 0,p2
+     29C : 46                         ld    p2, ea
+     29D : 16                         call  6
+     29E : 1F                         call  15
+     29F : 08                         push  ea
+     2A0 : 74 5F                      bra   X'0301
+     2A2 : 20 91 01                   jsr   X'0192
+     2A5 : C6 FF                      ld    a, @-1,p2
+     2A7 : 16                         call  6
+     2A8 : 10                         call  0
+     2A9 : 15                         call  5
+     2AA : 58                         or    a, e
+     2AB : 6C F5                      bz    X'02A2
+     2AD : 23 CB 01                   pli   p3, =X'01CB
+     2B0 : 1B                         call  11
+     2B1 : 10                         call  0
+     2B2 : 22 C2 04                   pli   p2, =X'04C2
+     2B5 : 15                         call  5
+     2B6 : 57                         push  p3
+     2B7 : 56                         push  p2
+     2B8 : BD E8                      sub   ea, X'FFE8
+     2BA : 08                         push  ea
+     2BB : 85 C6                      ld    ea, X'FFC6
+     2BD : 46                         ld    p2, ea
+     2BE : 5C                         ret
+     2BF : 46                         ld    p2, ea
+     2C0 : 4F                         xch   ea, p3
+ins8073_basic.hex: error: Unknown instruction
+     2C1 : 52
+     2C2 : E4 44                      xor   a, =X'44
+     2C4 : 4F                         xch   ea, p3
+     2C5 : A7 4F                      ld    t, @79,p3
+     2C7 : 4E                         xch   ea, p2
+     2C8 : 8F 43                      st    ea, @67,p3
+     2CA : 4C                         xch   ea, pc
+     2CB : 45                         ld    sp, ea
+ins8073_basic.hex: error: Unknown instruction
+     2CC : 41
+ins8073_basic.hex: error: Unknown instruction
+     2CD : 52
+     2CE : 85 80                      ld    ea, X'FF80
+     2D0 : 23 23 04                   pli   p3, =X'0423
+     2D3 : 1B                         call  11
+     2D4 : 20 C5 05                   jsr   X'05C6
+     2D7 : 16                         call  6
+     2D8 : 10                         call  0
+     2D9 : 1C                         call  12
+     2DA : 2C                         mpy   ea, t
+     2DB : 01                         xch   a, e
+     2DC : 15                         call  5
+     2DD : D4 01                      and   a, =1
+     2DF : 6C 07                      bz    X'02E8
+     2E1 : CD E6                      st    a, X'FFE6
+     2E3 : 10                         call  0
+     2E4 : 15                         call  5
+     2E5 : 8D E2                      st    ea, X'FFE2
+     2E7 : 16                         call  6
+     2E8 : 10                         call  0
+     2E9 : 15                         call  5
+     2EA : 8D E4                      st    ea, X'FFE4
+     2EC : 16                         call  6
+     2ED : 85 DA                      ld    ea, X'FFDA
+     2EF : 57                         push  p3
+     2F0 : 47                         ld    p3, ea
+     2F1 : 85 CE                      ld    ea, X'FFCE
+     2F3 : CD F6                      st    a, X'FFF6
+     2F5 : 33                         ld    ea, p3
+     2F6 : 20 C0 03                   jsr   X'03C1
+     2F9 : 32                         ld    ea, p2
+     2FA : 8F 02                      st    ea, @2,p3
+     2FC : 33                         ld    ea, p3
+     2FD : 5F                         pop   p3
+     2FE : 8D DA                      st    ea, X'FFDA
+     300 : 16                         call  6
+     301 : 10                         call  0
+     302 : 85 DA                      ld    ea, X'FFDA
+     304 : BD CC                      sub   ea, X'FFCC
+     306 : 58                         or    a, e
+     307 : 7C 02                      bnz   X'030B
+     309 : 1F                         call  15
+     30A : 0B                         ld    ea, t
+     30B : 15                         call  5
+     30C : 58                         or    a, e
+     30D : 6C 07                      bz    X'0316
+     30F : 85 DA                      ld    ea, X'FFDA
+     311 : BC 02 00                   sub   ea, =2
+     314 : 74 E8                      bra   X'02FE
+     316 : 85 DA                      ld    ea, X'FFDA
+     318 : 46                         ld    p2, ea
+     319 : 82 FE                      ld    ea, -2,p2
+     31B : 46                         ld    p2, ea
+     31C : 16                         call  6
+ins8073_basic.hex: error: Unknown instruction
+     31D : 53
+     31E : 54                         push  pc
+     31F : 45                         ld    sp, ea
+     320 : 50                         and   a, e
+     321 : 96 98                      ild   a, @-104,p2
+     323 : 54                         push  pc
+     324 : 4F                         xch   ea, p3
+     325 : 8D FD                      st    ea, X'FFFD
+     327 : 20 6C 05                   jsr   X'056D
+ins8073_basic.hex: error: Unknown instruction
+     32A : 7A
+     32B : 1C                         call  12
+     32C : 3D                         srl   a
+     32D : 77 10                      bra   16,p3
+     32F : 23 23 03                   pli   p3, =X'0323
+     332 : 1B                         call  11
+     333 : 10                         call  0
+     334 : 23 1D 03                   pli   p3, =X'031D
+     337 : 1B                         call  11
+     338 : 10                         call  0
+     339 : 74 04                      bra   X'033F
+     33B : 85 E8                      ld    ea, X'FFE8
+     33D : 8F 02                      st    ea, @2,p3
+     33F : 85 DC                      ld    ea, X'FFDC
+     341 : 56                         push  p2
+     342 : 46                         ld    p2, ea
+     343 : 85 D0                      ld    ea, X'FFD0
+     345 : CD F6                      st    a, X'FFF6
+     347 : 32                         ld    ea, p2
+     348 : 20 C0 03                   jsr   X'03C1
+     34B : 15                         call  5
+     34C : 8E 02                      st    ea, @2,p2
+     34E : 15                         call  5
+     34F : 8E 02                      st    ea, @2,p2
+     351 : 15                         call  5
+     352 : 09                         ld    t, ea
+     353 : 15                         call  5
+     354 : 8D F6                      st    ea, X'FFF6
+     356 : CE 01                      st    a, @1,p2
+     358 : 81 00                      ld    ea, 0,sp
+     35A : 8E 02                      st    ea, @2,p2
+     35C : 32                         ld    ea, p2
+     35D : 8D DC                      st    ea, X'FFDC
+     35F : 85 F6                      ld    ea, X'FFF6
+     361 : 46                         ld    p2, ea
+     362 : 0B                         ld    ea, t
+     363 : 8A 00                      st    ea, 0,p2
+     365 : 5E                         pop   p2
+     366 : 16                         call  6
+     367 : 1F                         call  15
+     368 : 0A                         push  a
+     369 : 20 6C 05                   jsr   X'056D
+     36C : 38                         pop   a
+     36D : 15                         call  5
+     36E : 09                         ld    t, ea
+     36F : 85 DC                      ld    ea, X'FFDC
+     371 : BD CE                      sub   ea, X'FFCE
+     373 : 6C F2                      bz    X'0367
+     375 : 85 DC                      ld    ea, X'FFDC
+     377 : BC 07 00                   sub   ea, =7
+     37A : 8D DC                      st    ea, X'FFDC
+     37C : 56                         push  p2
+     37D : 46                         ld    p2, ea
+     37E : 0B                         ld    ea, t
+     37F : FA 04                      sub   a, 4,p2
+     381 : 6C 03                      bz    X'0386
+     383 : 5E                         pop   p2
+     384 : 74 E9                      bra   X'036F
+     386 : C2 01                      ld    a, 1,p2
+     388 : 64 09                      bp    X'0393
+     38A : 20 A5 03                   jsr   X'03A6
+     38D : E4 FF                      xor   a, =X'FF
+     38F : 6C 07                      bz    X'0398
+     391 : 74 03                      bra   X'0396
+     393 : 20 A5 03                   jsr   X'03A6
+     396 : 64 CD                      bp    X'0365
+     398 : 82 05                      ld    ea, 5,p2
+     39A : 5E                         pop   p2
+     39B : 46                         ld    p2, ea
+     39C : 85 DC                      ld    ea, X'FFDC
+     39E : B4 07 00                   add   ea, =7
+     3A1 : 8D DC                      st    ea, X'FFDC
+     3A3 : 16                         call  6
+     3A4 : 1F                         call  15
+ins8073_basic.hex: error: Unknown instruction
+     3A5 : 04
+     3A6 : 85 C6                      ld    ea, X'FFC6
+     3A8 : C2 04                      ld    a, 4,p2
+     3AA : 57                         push  p3
+     3AB : 47                         ld    p3, ea
+     3AC : 83 00                      ld    ea, 0,p3
+     3AE : B2 00                      add   ea, 0,p2
+     3B0 : 8B 00                      st    ea, 0,p3
+     3B2 : 5F                         pop   p3
+     3B3 : BA 02                      sub   ea, 2,p2
+     3B5 : 6C 04                      bz    X'03BB
+     3B7 : 01                         xch   a, e
+     3B8 : D4 80                      and   a, =X'80
+     3BA : 5C                         ret
+     3BB : 01                         xch   a, e
+     3BC : 7C FA                      bnz   X'03B8
+     3BE : C4 FF                      ld    a, =X'FF
+     3C0 : 5C                         ret
+     3C1 : FD F6                      sub   a, X'FFF6
+     3C3 : 64 01                      bp    X'03C6
+     3C5 : 5C                         ret
+     3C6 : 1F                         call  15
+     3C7 : 09                         ld    t, ea
+     3C8 : 1F                         call  15
+ins8073_basic.hex: error: Unknown instruction
+     3C9 : 02
+     3CA : C5 C2                      ld    a, X'FFC2
+     3CC : 6C FA                      bz    X'03C8
+     3CE : 32                         ld    ea, p2
+     3CF : 8D F2                      st    ea, X'FFF2
+     3D1 : 20 6C 05                   jsr   X'056D
+ins8073_basic.hex: error: Unknown instruction
+     3D4 : 29
+     3D5 : C4 03                      ld    a, =3
+     3D7 : 20 1A 04                   jsr   X'041B
+     3DA : 20 4C 08                   jsr   X'084D
+     3DD : 10                         call  0
+     3DE : 15                         call  5
+     3DF : 09                         ld    t, ea
+     3E0 : 15                         call  5
+     3E1 : 57                         push  p3
+     3E2 : 47                         ld    p3, ea
+     3E3 : 0B                         ld    ea, t
+     3E4 : 8B 00                      st    ea, 0,p3
+     3E6 : 5F                         pop   p3
+     3E7 : C4 01                      ld    a, =1
+     3E9 : 20 1A 04                   jsr   X'041B
+     3EC : 1C                         call  12
+     3ED : 2C                         mpy   ea, t
+     3EE : 2C                         mpy   ea, t
+     3EF : 20 6C 05                   jsr   X'056D
+     3F2 : D6 C4                      and   a, @-60,p2
+ins8073_basic.hex: error: Unknown instruction
+     3F4 : 03
+     3F5 : 20 1A 04                   jsr   X'041B
+     3F8 : 1C                         call  12
+     3F9 : 2C                         mpy   ea, t
+     3FA : 01                         xch   a, e
+     3FB : 74 E0                      bra   X'03DD
+     3FD : 1C                         call  12
+     3FE : 24 C9 11                   jmp   X'11CA
+     401 : C4 03                      ld    a, =3
+     403 : 20 1A 04                   jsr   X'041B
+     406 : 20 4C 08                   jsr   X'084D
+     409 : 15                         call  5
+     40A : 57                         push  p3
+     40B : 47                         ld    p3, ea
+     40C : C6 01                      ld    a, @1,p2
+     40E : CF 01                      st    a, @1,p3
+     410 : E4 0D                      xor   a, =13
+     412 : 7C F8                      bnz   X'040C
+     414 : 5F                         pop   p3
+     415 : C4 01                      ld    a, =1
+     417 : 20 1A 04                   jsr   X'041B
+     41A : 16                         call  6
+     41B : CD C2                      st    a, X'FFC2
+     41D : 85 F0                      ld    ea, X'FFF0
+     41F : 4E                         xch   ea, p2
+     420 : 8D F0                      st    ea, X'FFF0
+     422 : 5C                         ret
+     423 : 44                         ld    pc, ea
+     424 : 45                         ld    sp, ea
+     425 : 4C                         xch   ea, pc
+ins8073_basic.hex: error: Unknown instruction
+     426 : 41
+ins8073_basic.hex: error: Unknown instruction
+     427 : 59
+     428 : 9A 49                      dld   a, 73,p2
+     42A : 4E                         xch   ea, p2
+     42B : 50                         and   a, e
+ins8073_basic.hex: error: Unknown instruction
+     42C : 55
+     42D : 54                         push  pc
+     42E : 8F 50                      st    ea, @80,p3
+ins8073_basic.hex: error: Unknown instruction
+     430 : 52
+ins8073_basic.hex: error: Unknown instruction
+     431 : 49
+     432 : 4E                         xch   ea, p2
+     433 : 54                         push  pc
+     434 : 8B 50                      st    ea, 80,p3
+ins8073_basic.hex: error: Unknown instruction
+     436 : 52
+     437 : 88 53                      st    ea, X'048B
+     439 : 54                         push  pc
+     43A : 4F                         xch   ea, p3
+     43B : 50                         and   a, e
+     43C : 91 9D                      ild   a, -99,sp
+     43E : 74 8A                      bra   X'03CA
+     440 : 24 C9 04                   jmp   X'04CA
+     443 : 10                         call  0
+     444 : 15                         call  5
+     445 : A4 3F 00                   ld    t, =X'003F
+     448 : 2C                         mpy   ea, t
+     449 : 0B                         ld    ea, t
+     44A : 20 CA 09                   jsr   X'09CB
+     44D : 16                         call  6
+     44E : 24 99 00                   jmp   X'009A
+ins8073_basic.hex: error: Unknown instruction
+     451 : 53
+     452 : 54                         push  pc
+ins8073_basic.hex: error: Unknown instruction
+     453 : 41
+     454 : 54                         push  pc
+     455 : 89 40                      st    ea, 64,sp
+     457 : 92 24                      ild   a, 36,p2
+     459 : B1 9E                      add   ea, -98,sp
+     45B : 23 51 04                   pli   p3, =X'0451
+     45E : 1B                         call  11
+     45F : 1C                         call  12
+     460 : 3D                         srl   a
+     461 : 67 10                      bp    16,p3
+     463 : 15                         call  5
+     464 : 07                         ld    s, a
+     465 : C4 01                      ld    a, =1
+     467 : CD E7                      st    a, X'FFE7
+     469 : 16                         call  6
+     46A : 11                         call  1
+     46B : 1C                         call  12
+     46C : 3D                         srl   a
+ins8073_basic.hex: error: Unknown instruction
+     46D : 5B
+     46E : 10                         call  0
+     46F : 15                         call  5
+     470 : 09                         ld    t, ea
+     471 : 15                         call  5
+     472 : 57                         push  p3
+     473 : 47                         ld    p3, ea
+     474 : 0B                         ld    ea, t
+     475 : CB 00                      st    a, 0,p3
+     477 : 5F                         pop   p3
+     478 : 16                         call  6
+     479 : 20 6C 05                   jsr   X'056D
+     47C : 4C                         xch   ea, pc
+     47D : 1C                         call  12
+     47E : 3D                         srl   a
+ins8073_basic.hex: error: Unknown instruction
+     47F : 49
+     480 : 10                         call  0
+     481 : 15                         call  5
+     482 : 09                         ld    t, ea
+     483 : 15                         call  5
+     484 : 57                         push  p3
+     485 : 47                         ld    p3, ea
+     486 : 0B                         ld    ea, t
+     487 : 8B 00                      st    ea, 0,p3
+     489 : 5F                         pop   p3
+     48A : 16                         call  6
+     48B : 11                         call  1
+     48C : 1C                         call  12
+     48D : 3D                         srl   a
+     48E : 3A                         pop   ea
+     48F : C2 00                      ld    a, 0,p2
+     491 : E4 22                      xor   a, =X'22
+     493 : 7C 1C                      bnz   X'04B1
+     495 : C6 01                      ld    a, @1,p2
+     497 : 15                         call  5
+     498 : 57                         push  p3
+     499 : 47                         ld    p3, ea
+     49A : C6 01                      ld    a, @1,p2
+     49C : E4 22                      xor   a, =X'22
+     49E : 6C 0A                      bz    X'04AA
+     4A0 : E4 2F                      xor   a, =X'2F
+     4A2 : 6C 22                      bz    X'04C6
+     4A4 : E4 0D                      xor   a, =13
+     4A6 : CF 01                      st    a, @1,p3
+     4A8 : 74 F0                      bra   X'049A
+     4AA : C4 0D                      ld    a, =13
+     4AC : CB 00                      st    a, 0,p3
+     4AE : 5F                         pop   p3
+     4AF : 19                         call  9
+     4B0 : 16                         call  6
+     4B1 : 1C                         call  12
+     4B2 : 24 15 11                   jmp   X'1116
+     4B5 : 15                         call  5
+     4B6 : 56                         push  p2
+     4B7 : 46                         ld    p2, ea
+     4B8 : 15                         call  5
+     4B9 : 57                         push  p3
+     4BA : 47                         ld    p3, ea
+     4BB : C6 01                      ld    a, @1,p2
+     4BD : CF 01                      st    a, @1,p3
+     4BF : E4 0D                      xor   a, =13
+     4C1 : 7C F8                      bnz   X'04BB
+     4C3 : 5F                         pop   p3
+     4C4 : 5E                         pop   p2
+     4C5 : 16                         call  6
+     4C6 : 1F                         call  15
+     4C7 : 06                         ld    a, s
+     4C8 : 1F                         call  15
+ins8073_basic.hex: error: Unknown instruction
+     4C9 : 04
+     4CA : C2 00                      ld    a, 0,p2
+     4CC : E4 22                      xor   a, =X'22
+     4CE : 7C 11                      bnz   X'04E1
+     4D0 : C6 01                      ld    a, @1,p2
+     4D2 : C6 01                      ld    a, @1,p2
+     4D4 : E4 22                      xor   a, =X'22
+     4D6 : 6C 18                      bz    X'04F0
+     4D8 : E4 2F                      xor   a, =X'2F
+     4DA : 6C EA                      bz    X'04C6
+     4DC : E4 0D                      xor   a, =13
+     4DE : 17                         call  7
+     4DF : 74 F1                      bra   X'04D2
+     4E1 : 1C                         call  12
+     4E2 : 24 09 11                   jmp   X'110A
+     4E5 : 15                         call  5
+     4E6 : 56                         push  p2
+     4E7 : 46                         ld    p2, ea
+     4E8 : 1E                         call  14
+     4E9 : 5E                         pop   p2
+     4EA : 74 04                      bra   X'04F0
+     4EC : 10                         call  0
+     4ED : 20 FB 04                   jsr   X'04FC
+     4F0 : 19                         call  9
+     4F1 : 1C                         call  12
+     4F2 : 2C                         mpy   ea, t
+ins8073_basic.hex: error: Unknown instruction
+     4F3 : 03
+     4F4 : 74 D4                      bra   X'04CA
+     4F6 : 1C                         call  12
+     4F7 : 3B 02                      or    s, =2
+     4F9 : 16                         call  6
+     4FA : 18                         call  8
+     4FB : 16                         call  6
+     4FC : 83 FE                      ld    ea, -2,p3
+     4FE : 01                         xch   a, e
+     4FF : 64 09                      bp    X'050A
+     501 : 01                         xch   a, e
+     502 : 1A                         call  10
+     503 : 8B FE                      st    ea, -2,p3
+     505 : C4 2D                      ld    a, =X'2D
+     507 : 17                         call  7
+     508 : 74 03                      bra   X'050D
+     50A : C4 20                      ld    a, =32
+     50C : 17                         call  7
+     50D : C4 00                      ld    a, =0
+     50F : CD FE                      st    a, X'FFFE
+     511 : 15                         call  5
+     512 : 23 F6 FF                   pli   p3, =X'FFF6
+     515 : A4 0A 00                   ld    t, =10
+     518 : 8D FC                      st    ea, X'FFFC
+     51A : 0D                         div   ea, t
+     51B : 08                         push  ea
+     51C : A4 0A 00                   ld    t, =10
+     51F : 2C                         mpy   ea, t
+     520 : 0B                         ld    ea, t
+     521 : 1A                         call  10
+     522 : B5 FC                      add   ea, X'FFFC
+     524 : CF 01                      st    a, @1,p3
+     526 : 95 FE                      ild   a, X'FFFE
+     528 : 3A                         pop   ea
+     529 : 7C EA                      bnz   X'0515
+     52B : 01                         xch   a, e
+     52C : 6C 03                      bz    X'0531
+     52E : 01                         xch   a, e
+     52F : 74 E4                      bra   X'0515
+     531 : C7 FF                      ld    a, @-1,p3
+     533 : F4 30                      add   a, =X'30
+     535 : 17                         call  7
+     536 : 9D FE                      dld   a, X'FFFE
+     538 : 7C F7                      bnz   X'0531
+     53A : C4 20                      ld    a, =32
+     53C : 17                         call  7
+     53D : 5F                         pop   p3
+     53E : 5C                         ret
+     53F : C6 01                      ld    a, @1,p2
+     541 : E4 0D                      xor   a, =13
+     543 : 6C 05                      bz    X'054A
+     545 : E4 0D                      xor   a, =13
+     547 : 17                         call  7
+     548 : 64 F5                      bp    X'053F
+     54A : 5C                         ret
+     54B : C6 01                      ld    a, @1,p2
+     54D : C2 00                      ld    a, 0,p2
+     54F : D4 7F                      and   a, =X'7F
+     551 : 48                         ld    e, a
+     552 : E4 20                      xor   a, =32
+     554 : 6C F5                      bz    X'054B
+     556 : E4 2A                      xor   a, =X'2A
+     558 : 6C F1                      bz    X'054B
+     55A : 40                         ld    a, e
+     55B : 6C EE                      bz    X'054B
+     55D : 5C                         ret
+     55E : 3A                         pop   ea
+     55F : B5 E8                      add   ea, X'FFE8
+     561 : 08                         push  ea
+     562 : 57                         push  p3
+     563 : 47                         ld    p3, ea
+     564 : C3 00                      ld    a, 0,p3
+     566 : E2 00                      xor   a, 0,p2
+     568 : 5F                         pop   p3
+     569 : 6C 23                      bz    X'058E
+     56B : 74 0C                      bra   X'0579
+     56D : C2 00                      ld    a, 0,p2
+     56F : 48                         ld    e, a
+     570 : FC 5B                      sub   a, =X'5B
+     572 : 64 05                      bp    X'0579
+     574 : 40                         ld    a, e
+     575 : FC 41                      sub   a, =X'41
+     577 : 64 0D                      bp    X'0586
+     579 : 3A                         pop   ea
+     57A : 8D F6                      st    ea, X'FFF6
+     57C : 57                         push  p3
+     57D : 47                         ld    p3, ea
+     57E : 85 EA                      ld    ea, X'FFEA
+     580 : C3 01                      ld    a, 1,p3
+     582 : B5 F6                      add   ea, X'FFF6
+     584 : 5F                         pop   p3
+     585 : 44                         ld    pc, ea
+     586 : 0E                         sl    a
+     587 : 01                         xch   a, e
+     588 : C4 00                      ld    a, =0
+     58A : 01                         xch   a, e
+     58B : B5 C6                      add   ea, X'FFC6
+     58D : 14                         call  4
+     58E : C6 01                      ld    a, @1,p2
+     590 : 19                         call  9
+     591 : 3A                         pop   ea
+     592 : B5 E8                      add   ea, X'FFE8
+     594 : 44                         ld    pc, ea
+     595 : C2 00                      ld    a, 0,p2
+     597 : 2D E0                      bnd   X'0579
+     599 : 85 EA                      ld    ea, X'FFEA
+     59B : 8D F6                      st    ea, X'FFF6
+     59D : 09                         ld    t, ea
+     59E : C6 01                      ld    a, @1,p2
+     5A0 : 2D 19                      bnd   X'05BB
+     5A2 : CD F6                      st    a, X'FFF6
+     5A4 : 84 0A 00                   ld    ea, =10
+     5A7 : 2C                         mpy   ea, t
+     5A8 : 58                         or    a, e
+     5A9 : 7C 0E                      bnz   X'05B9
+     5AB : 0B                         ld    ea, t
+     5AC : B5 F6                      add   ea, X'FFF6
+     5AE : 09                         ld    t, ea
+     5AF : 40                         ld    a, e
+     5B0 : 64 02                      bp    X'05B4
+     5B2 : 74 05                      bra   X'05B9
+     5B4 : 06                         ld    a, s
+     5B5 : D4 C0                      and   a, =X'C0
+     5B7 : 6C E5                      bz    X'059E
+     5B9 : 1F                         call  15
+ins8073_basic.hex: error: Unknown instruction
+     5BA : 05
+     5BB : C6 FF                      ld    a, @-1,p2
+     5BD : 0B                         ld    ea, t
+     5BE : 14                         call  4
+     5BF : 74 CF                      bra   X'0590
+     5C1 : 84 00 00                   ld    ea, =0
+     5C4 : 8D C3                      st    ea, X'FFC3
+     5C6 : 85 C6                      ld    ea, X'FFC6
+     5C8 : B4 34 00                   add   ea, =X'0034
+     5CB : 8D C8                      st    ea, X'FFC8
+     5CD : B4 1A 00                   add   ea, =26
+     5D0 : 8D CA                      st    ea, X'FFCA
+     5D2 : 8D DE                      st    ea, X'FFDE
+     5D4 : B4 10 00                   add   ea, =16
+     5D7 : 8D CC                      st    ea, X'FFCC
+     5D9 : 8D DA                      st    ea, X'FFDA
+     5DB : B4 10 00                   add   ea, =16
+     5DE : 8D CE                      st    ea, X'FFCE
+     5E0 : 8D DC                      st    ea, X'FFDC
+     5E2 : B4 1C 00                   add   ea, =28
+     5E5 : 8D D0                      st    ea, X'FFD0
+     5E7 : 20 E4 09                   jsr   X'09E5
+     5EA : C4 34                      ld    a, =X'34
+     5EC : CD F6                      st    a, X'FFF6
+     5EE : 85 C6                      ld    ea, X'FFC6
+     5F0 : 47                         ld    p3, ea
+     5F1 : 84 00 00                   ld    ea, =0
+     5F4 : 8D EA                      st    ea, X'FFEA
+     5F6 : 8D E0                      st    ea, X'FFE0
+     5F8 : 8D E2                      st    ea, X'FFE2
+     5FA : 8D E4                      st    ea, X'FFE4
+     5FC : 8D C0                      st    ea, X'FFC0
+     5FE : CD E6                      st    a, X'FFE6
+     600 : C4 00                      ld    a, =0
+     602 : CF 01                      st    a, @1,p3
+     604 : 9D F6                      dld   a, X'FFF6
+     606 : 7C F8                      bnz   X'0600
+     608 : C4 01                      ld    a, =1
+     60A : 8D E8                      st    ea, X'FFE8
+     60C : 85 C8                      ld    ea, X'FFC8
+     60E : 47                         ld    p3, ea
+     60F : C4 52                      ld    a, =X'52
+     611 : CD C5                      st    a, X'FFC5
+     613 : 5C                         ret
+     614 : 3A                         pop   ea
+     615 : 56                         push  p2
+     616 : C7 01                      ld    a, @1,p3
+     618 : 64 15                      bp    X'062F
+     61A : 74 05                      bra   X'0621
+     61C : C7 01                      ld    a, @1,p3
+     61E : 64 0F                      bp    X'062F
+     620 : 19                         call  9
+     621 : 3A                         pop   ea
+     622 : 85 EA                      ld    ea, X'FFEA
+     624 : C7 FF                      ld    a, @-1,p3
+     626 : D4 7F                      and   a, =X'7F
+     628 : 8D F6                      st    ea, X'FFF6
+     62A : 33                         ld    ea, p3
+     62B : B5 F6                      add   ea, X'FFF6
+     62D : 5F                         pop   p3
+     62E : 44                         ld    pc, ea
+     62F : E6 01                      xor   a, @1,p2
+     631 : D4 7F                      and   a, =X'7F
+     633 : 6C E7                      bz    X'061C
+     635 : 5E                         pop   p2
+     636 : C7 01                      ld    a, @1,p3
+     638 : 64 FC                      bp    X'0636
+     63A : 74 D9                      bra   X'0615
+     63C : 20 8E 06                   jsr   X'068F
+     63F : 23 43 06                   pli   p3, =X'0643
+     642 : 1B                         call  11
+     643 : 3D                         srl   a
+     644 : 8E 3C                      st    ea, @60,p2
+     646 : 3D                         srl   a
+     647 : 90 3C                      ild   a, X'0684
+     649 : 3E                         rr    a
+     64A : 92 3C                      ild   a, 60,p2
+     64C : 95 3E                      ild   a, X'FF3E
+     64E : 3D                         srl   a
+     64F : 97 3E                      ild   a, @62,p3
+     651 : 9A A6                      dld   a, -90,p2
+     653 : 13                         call  3
+     654 : D4 02                      and   a, =2
+     656 : 74 17                      bra   X'066F
+     658 : 13                         call  3
+     659 : D4 82                      and   a, =X'82
+     65B : 74 12                      bra   X'066F
+     65D : 13                         call  3
+     65E : D4 81                      and   a, =X'81
+     660 : 74 0D                      bra   X'066F
+     662 : 13                         call  3
+     663 : D4 80                      and   a, =X'80
+     665 : 74 08                      bra   X'066F
+     667 : 13                         call  3
+     668 : D4 03                      and   a, =3
+     66A : 74 03                      bra   X'066F
+     66C : 13                         call  3
+     66D : D4 01                      and   a, =1
+     66F : 6C 05                      bz    X'0676
+     671 : 84 FF FF                   ld    ea, =X'FFFF
+     674 : 14                         call  4
+     675 : 5C                         ret
+     676 : 85 EA                      ld    ea, X'FFEA
+     678 : 14                         call  4
+     679 : 5C                         ret
+     67A : 20 8E 06                   jsr   X'068F
+     67D : 12                         call  2
+     67E : BD F6                      sub   ea, X'FFF6
+     680 : 01                         xch   a, e
+     681 : 64 03                      bp    X'0686
+     683 : C4 80                      ld    a, =X'80
+     685 : 5C                         ret
+     686 : 58                         or    a, e
+     687 : 6C 03                      bz    X'068C
+     689 : C4 01                      ld    a, =1
+     68B : 5C                         ret
+     68C : C4 02                      ld    a, =2
+     68E : 5C                         ret
+     68F : 1C                         call  12
+     690 : 2D 09                      bnd   X'069B
+     692 : 20 C7 06                   jsr   X'06C8
+     695 : 15                         call  5
+     696 : 1A                         call  10
+     697 : 14                         call  4
+     698 : 74 06                      bra   X'06A0
+     69A : 1C                         call  12
+ins8073_basic.hex: error: Unknown instruction
+     69B : 2B
+     69C : 01                         xch   a, e
+     69D : 20 C7 06                   jsr   X'06C8
+     6A0 : 23 A4 06                   pli   p3, =X'06A4
+     6A3 : 1B                         call  11
+ins8073_basic.hex: error: Unknown instruction
+     6A4 : 2B
+     6A5 : 86 2D                      ld    ea, @45,p2
+ins8073_basic.hex: error: Unknown instruction
+     6A7 : 8C
+     6A8 : 4F                         xch   ea, p3
+ins8073_basic.hex: error: Unknown instruction
+     6A9 : 52
+     6AA : 91 C5                      ild   a, -59,sp
+     6AC : 20 C7 06                   jsr   X'06C8
+     6AF : 12                         call  2
+     6B0 : B5 F6                      add   ea, X'FFF6
+     6B2 : 74 E3                      bra   X'0697
+     6B4 : 20 C7 06                   jsr   X'06C8
+     6B7 : 12                         call  2
+     6B8 : BD F6                      sub   ea, X'FFF6
+     6BA : 74 DB                      bra   X'0697
+     6BC : 20 C7 06                   jsr   X'06C8
+     6BF : 12                         call  2
+     6C0 : DD F6                      or    a, X'FFF6
+     6C2 : 01                         xch   a, e
+     6C3 : DD F7                      or    a, X'FFF7
+     6C5 : 01                         xch   a, e
+     6C6 : 74 CF                      bra   X'0697
+     6C8 : 11                         call  1
+     6C9 : 23 CD 06                   pli   p3, =X'06CD
+     6CC : 1B                         call  11
+ins8073_basic.hex: error: Unknown instruction
+     6CD : 2A
+     6CE : 87 2F                      ld    ea, @47,p3
+     6D0 : 8D 41                      st    ea, X'FF41
+     6D2 : 4E                         xch   ea, p2
+     6D3 : 44                         ld    pc, ea
+     6D4 : 90 9B                      ild   a, X'0670
+     6D6 : 11                         call  1
+     6D7 : 12                         call  2
+     6D8 : 20 F4 07                   jsr   X'07F5
+     6DB : 14                         call  4
+     6DC : 74 EB                      bra   X'06C9
+     6DE : 11                         call  1
+     6DF : 12                         call  2
+     6E0 : 20 0C 08                   jsr   X'080D
+     6E3 : 74 F6                      bra   X'06DB
+     6E5 : 11                         call  1
+     6E6 : 12                         call  2
+     6E7 : D5 F6                      and   a, X'FFF6
+     6E9 : 01                         xch   a, e
+     6EA : D5 F7                      and   a, X'FFF7
+     6EC : 01                         xch   a, e
+     6ED : 74 EC                      bra   X'06DB
+     6EF : 1D                         call  13
+ins8073_basic.hex: error: Unknown instruction
+     6F0 : 02
+     6F1 : 5C                         ret
+     6F2 : 23 F6 06                   pli   p3, =X'06F6
+     6F5 : 1B                         call  11
+ins8073_basic.hex: error: Unknown instruction
+     6F6 : 28
+     6F7 : B2 40                      add   ea, 64,p2
+     6F9 : B7 23                      add   ea, @35,p3
+     6FB : E5 4E                      xor   a, X'FF4E
+     6FD : 4F                         xch   ea, p3
+     6FE : 54                         push  pc
+     6FF : B7 53                      add   ea, @83,p3
+     701 : 54                         push  pc
+ins8073_basic.hex: error: Unknown instruction
+     702 : 41
+     703 : 54                         push  pc
+     704 : BC 54 4F                   sub   ea, =X'4F54
+     707 : 50                         and   a, e
+     708 : BB 49                      sub   ea, 73,p3
+     70A : 4E                         xch   ea, p2
+ins8073_basic.hex: error: Unknown instruction
+     70B : 43
+     70C : BD 44                      sub   ea, X'FF44
+     70E : 45                         ld    sp, ea
+ins8073_basic.hex: error: Unknown instruction
+     70F : 43
+     710 : C2 4D                      ld    a, 77,p2
+     712 : 4F                         xch   ea, p3
+     713 : 44                         ld    pc, ea
+     714 : CE 52                      st    a, @82,p2
+     716 : 4E                         xch   ea, p2
+     717 : 44                         ld    pc, ea
+     718 : E5 80                      xor   a, X'FF80
+     71A : 20 6C 05                   jsr   X'056D
+     71D : 12                         call  2
+     71E : 20 22 07                   jsr   X'0723
+     721 : 14                         call  4
+     722 : 5C                         ret
+     723 : 15                         call  5
+     724 : 57                         push  p3
+     725 : 47                         ld    p3, ea
+     726 : 83 00                      ld    ea, 0,p3
+     728 : 5F                         pop   p3
+     729 : 5C                         ret
+     72A : 10                         call  0
+     72B : 1C                         call  12
+ins8073_basic.hex: error: Unknown instruction
+     72C : 29
+ins8073_basic.hex: error: Unknown instruction
+     72D : 02
+     72E : 5C                         ret
+     72F : 1F                         call  15
+ins8073_basic.hex: error: Unknown instruction
+     730 : 04
+     731 : 11                         call  1
+     732 : 20 22 07                   jsr   X'0723
+     735 : 74 24                      bra   X'075B
+     737 : 11                         call  1
+     738 : 15                         call  5
+     739 : E4 FF                      xor   a, =X'FF
+     73B : 01                         xch   a, e
+     73C : E4 FF                      xor   a, =X'FF
+     73E : 01                         xch   a, e
+     73F : 14                         call  4
+     740 : 5C                         ret
+     741 : 06                         ld    a, s
+     742 : 74 17                      bra   X'075B
+     744 : 85 D6                      ld    ea, X'FFD6
+     746 : B5 E8                      add   ea, X'FFE8
+     748 : 14                         call  4
+     749 : 5C                         ret
+     74A : 20 A2 07                   jsr   X'07A3
+     74D : 56                         push  p2
+     74E : 46                         ld    p2, ea
+     74F : 92 00                      ild   a, 0,p2
+     751 : 74 07                      bra   X'075A
+     753 : 20 A2 07                   jsr   X'07A3
+     756 : 56                         push  p2
+     757 : 46                         ld    p2, ea
+     758 : 9A 00                      dld   a, 0,p2
+     75A : 5E                         pop   p2
+     75B : 01                         xch   a, e
+     75C : C4 00                      ld    a, =0
+     75E : 01                         xch   a, e
+     75F : 14                         call  4
+     760 : 5C                         ret
+     761 : 74 57                      bra   X'07BA
+     763 : 20 AB 07                   jsr   X'07AC
+     766 : 12                         call  2
+     767 : 09                         ld    t, ea
+     768 : 85 F6                      ld    ea, X'FFF6
+     76A : 8D FE                      st    ea, X'FFFE
+     76C : 0B                         ld    ea, t
+     76D : 8D FC                      st    ea, X'FFFC
+     76F : 20 0C 08                   jsr   X'080D
+     772 : 8D F6                      st    ea, X'FFF6
+     774 : 85 FE                      ld    ea, X'FFFE
+     776 : 20 F4 07                   jsr   X'07F5
+     779 : 1A                         call  10
+     77A : B5 FC                      add   ea, X'FFFC
+     77C : 14                         call  4
+     77D : 5C                         ret
+     77E : 20 AB 07                   jsr   X'07AC
+     781 : A5 F4                      ld    t, X'FFF4
+     783 : 84 85 04                   ld    ea, =X'0485
+     786 : 2C                         mpy   ea, t
+     787 : 0B                         ld    ea, t
+     788 : B4 19 36                   add   ea, =X'3619
+     78B : 8D F4                      st    ea, X'FFF4
+     78D : 15                         call  5
+     78E : B5 E8                      add   ea, X'FFE8
+     790 : BB FE                      sub   ea, -2,p3
+     792 : 8D F6                      st    ea, X'FFF6
+     794 : 85 F4                      ld    ea, X'FFF4
+     796 : 01                         xch   a, e
+     797 : D4 7F                      and   a, =X'7F
+     799 : 01                         xch   a, e
+     79A : 20 66 07                   jsr   X'0767
+     79D : 15                         call  5
+     79E : B3 FE                      add   ea, -2,p3
+     7A0 : 8B FE                      st    ea, -2,p3
+     7A2 : 5C                         ret
+     7A3 : 1C                         call  12
+ins8073_basic.hex: error: Unknown instruction
+     7A4 : 28
+     7A5 : 13                         call  3
+     7A6 : 10                         call  0
+     7A7 : 1C                         call  12
+ins8073_basic.hex: error: Unknown instruction
+     7A8 : 29
+     7A9 : 0F                         sl    ea
+     7AA : 15                         call  5
+     7AB : 5C                         ret
+     7AC : 1C                         call  12
+ins8073_basic.hex: error: Unknown instruction
+     7AD : 28
+     7AE : 0A                         push  a
+     7AF : 10                         call  0
+     7B0 : 1C                         call  12
+     7B1 : 2C                         mpy   ea, t
+     7B2 : 06                         ld    a, s
+     7B3 : 10                         call  0
+     7B4 : 1C                         call  12
+ins8073_basic.hex: error: Unknown instruction
+     7B5 : 29
+ins8073_basic.hex: error: Unknown instruction
+     7B6 : 02
+     7B7 : 5C                         ret
+     7B8 : 1F                         call  15
+ins8073_basic.hex: error: Unknown instruction
+     7B9 : 04
+     7BA : 85 EA                      ld    ea, X'FFEA
+     7BC : 8D F6                      st    ea, X'FFF6
+     7BE : 09                         ld    t, ea
+     7BF : C6 01                      ld    a, @1,p2
+     7C1 : 2D 02                      bnd   X'07C5
+     7C3 : 74 1A                      bra   X'07DF
+     7C5 : 20 EA 07                   jsr   X'07EB
+     7C8 : 64 13                      bp    X'07DD
+     7CA : 1F                         call  15
+ins8073_basic.hex: error: Unknown instruction
+     7CB : 05
+     7CC : C6 01                      ld    a, @1,p2
+     7CE : 2D 02                      bnd   X'07D2
+     7D0 : 74 0D                      bra   X'07DF
+     7D2 : 20 EA 07                   jsr   X'07EB
+     7D5 : 64 06                      bp    X'07DD
+     7D7 : 0B                         ld    ea, t
+     7D8 : 14                         call  4
+     7D9 : C6 FF                      ld    a, @-1,p2
+     7DB : 19                         call  9
+     7DC : 5C                         ret
+     7DD : F4 0A                      add   a, =10
+     7DF : CD F6                      st    a, X'FFF6
+     7E1 : 0B                         ld    ea, t
+     7E2 : 0F                         sl    ea
+     7E3 : 0F                         sl    ea
+     7E4 : 0F                         sl    ea
+     7E5 : 0F                         sl    ea
+     7E6 : B5 F6                      add   ea, X'FFF6
+     7E8 : 09                         ld    t, ea
+     7E9 : 74 E1                      bra   X'07CC
+     7EB : FC 47                      sub   a, =X'47
+     7ED : 64 03                      bp    X'07F2
+     7EF : F4 06                      add   a, =6
+     7F1 : 5C                         ret
+     7F2 : C4 FF                      ld    a, =X'FF
+     7F4 : 5C                         ret
+     7F5 : 20 1E 08                   jsr   X'081F
+     7F8 : A5 F6                      ld    t, X'FFF6
+     7FA : 2C                         mpy   ea, t
+     7FB : 8D C0                      st    ea, X'FFC0
+     7FD : C5 FB                      ld    a, X'FFFB
+     7FF : 64 0A                      bp    X'080B
+     801 : 0B                         ld    ea, t
+     802 : E4 FF                      xor   a, =X'FF
+     804 : 01                         xch   a, e
+     805 : E4 FF                      xor   a, =X'FF
+     807 : 01                         xch   a, e
+     808 : B5 E8                      add   ea, X'FFE8
+     80A : 5C                         ret
+     80B : 0B                         ld    ea, t
+     80C : 5C                         ret
+     80D : 20 1E 08                   jsr   X'081F
+     810 : 09                         ld    t, ea
+     811 : 85 F6                      ld    ea, X'FFF6
+     813 : 58                         or    a, e
+     814 : 6C 07                      bz    X'081D
+     816 : 0B                         ld    ea, t
+     817 : A5 F6                      ld    t, X'FFF6
+     819 : 0D                         div   ea, t
+     81A : 09                         ld    t, ea
+     81B : 74 E0                      bra   X'07FD
+     81D : 1F                         call  15
+     81E : 0C                         sr    ea
+     81F : 09                         ld    t, ea
+     820 : C5 F7                      ld    a, X'FFF7
+     822 : CD FB                      st    a, X'FFFB
+     824 : 64 05                      bp    X'082B
+     826 : 85 F6                      ld    ea, X'FFF6
+     828 : 1A                         call  10
+     829 : 8D F6                      st    ea, X'FFF6
+     82B : 0B                         ld    ea, t
+     82C : 40                         ld    a, e
+     82D : E5 FB                      xor   a, X'FFFB
+     82F : CD FB                      st    a, X'FFFB
+     831 : 0B                         ld    ea, t
+     832 : 01                         xch   a, e
+     833 : 64 03                      bp    X'0838
+     835 : 01                         xch   a, e
+     836 : 1A                         call  10
+     837 : 5C                         ret
+     838 : 01                         xch   a, e
+     839 : 5C                         ret
+     83A : 08                         push  ea
+     83B : 33                         ld    ea, p3
+     83C : BD CA                      sub   ea, X'FFCA
+     83E : 01                         xch   a, e
+     83F : 64 04                      bp    X'0845
+     841 : 3A                         pop   ea
+     842 : 8F 02                      st    ea, @2,p3
+     844 : 5C                         ret
+     845 : 1F                         call  15
+     846 : 09                         ld    t, ea
+     847 : 15                         call  5
+     848 : 8D F6                      st    ea, X'FFF6
+     84A : 87 FE                      ld    ea, @-2,p3
+     84C : 5C                         ret
+     84D : 85 D0                      ld    ea, X'FFD0
+     84F : 46                         ld    p2, ea
+     850 : C4 00                      ld    a, =0
+     852 : CD FE                      st    a, X'FFFE
+     854 : C5 C2                      ld    a, X'FFC2
+     856 : 6C 07                      bz    X'085F
+     858 : C4 3F                      ld    a, =X'3F
+     85A : 17                         call  7
+     85B : C4 20                      ld    a, =32
+     85D : 74 02                      bra   X'0861
+     85F : C4 3E                      ld    a, =X'3E
+     861 : 17                         call  7
+     862 : 20 2A 09                   jsr   X'092B
+     865 : 6C FB                      bz    X'0862
+     867 : 48                         ld    e, a
+     868 : E4 0A                      xor   a, =10
+     86A : 6C F6                      bz    X'0862
+     86C : E4 07                      xor   a, =7
+     86E : 6C 3F                      bz    X'08AF
+     870 : E4 52                      xor   a, =X'52
+     872 : 6C 25                      bz    X'0899
+     874 : E4 57                      xor   a, =X'57
+     876 : 6C 1B                      bz    X'0893
+     878 : E4 1D                      xor   a, =29
+     87A : 6C 0E                      bz    X'088A
+     87C : E4 16                      xor   a, =22
+     87E : 7C 23                      bnz   X'08A3
+     880 : C4 5E                      ld    a, =X'5E
+     882 : 17                         call  7
+     883 : C4 43                      ld    a, =X'43
+     885 : 17                         call  7
+     886 : 18                         call  8
+     887 : 24 99 00                   jmp   X'009A
+     88A : C4 5E                      ld    a, =X'5E
+     88C : 17                         call  7
+     88D : C4 55                      ld    a, =X'55
+     88F : 17                         call  7
+     890 : 18                         call  8
+     891 : 74 BA                      bra   X'084D
+     893 : C4 20                      ld    a, =32
+     895 : 17                         call  7
+     896 : C4 08                      ld    a, =8
+     898 : 17                         call  7
+     899 : C5 FE                      ld    a, X'FFFE
+     89B : 6C C5                      bz    X'0862
+     89D : 9D FE                      dld   a, X'FFFE
+     89F : C6 FF                      ld    a, @-1,p2
+     8A1 : 74 BF                      bra   X'0862
+     8A3 : 40                         ld    a, e
+     8A4 : CE 01                      st    a, @1,p2
+     8A6 : 95 FE                      ild   a, X'FFFE
+     8A8 : E4 49                      xor   a, =X'49
+     8AA : 7C B6                      bnz   X'0862
+     8AC : C4 0D                      ld    a, =13
+     8AE : 17                         call  7
+     8AF : C4 0D                      ld    a, =13
+     8B1 : CE 01                      st    a, @1,p2
+     8B3 : C4 0A                      ld    a, =10
+     8B5 : 17                         call  7
+     8B6 : 85 D0                      ld    ea, X'FFD0
+     8B8 : 46                         ld    p2, ea
+     8B9 : 5C                         ret
+     8BA : 08                         push  ea
+     8BB : 85 E2                      ld    ea, X'FFE2
+     8BD : 74 03                      bra   X'08C2
+     8BF : 08                         push  ea
+     8C0 : 85 E4                      ld    ea, X'FFE4
+     8C2 : 8D E0                      st    ea, X'FFE0
+     8C4 : 58                         or    a, e
+     8C5 : 6C 02                      bz    X'08C9
+     8C7 : 3A                         pop   ea
+     8C8 : 5C                         ret
+     8C9 : 3A                         pop   ea
+     8CA : 3B 01                      or    s, =1
+     8CC : 5C                         ret
+     8CD : 3A                         pop   ea
+     8CE : 47                         ld    p3, ea
+     8CF : 56                         push  p2
+     8D0 : 26 0C 09                   ld    p2, =X'090C
+     8D3 : 1E                         call  14
+     8D4 : 85 EA                      ld    ea, X'FFEA
+     8D6 : C3 01                      ld    a, 1,p3
+     8D8 : 47                         ld    p3, ea
+     8D9 : 85 C8                      ld    ea, X'FFC8
+     8DB : 4F                         xch   ea, p3
+     8DC : 14                         call  4
+     8DD : 20 FB 04                   jsr   X'04FC
+     8E0 : C5 C2                      ld    a, X'FFC2
+     8E2 : 6C 07                      bz    X'08EB
+     8E4 : E4 03                      xor   a, =3
+     8E6 : 6C 0C                      bz    X'08F4
+     8E8 : 20 01 09                   jsr   X'0902
+     8EB : 18                         call  8
+     8EC : 5E                         pop   p2
+     8ED : C4 00                      ld    a, =0
+     8EF : CD C2                      st    a, X'FFC2
+     8F1 : 24 99 00                   jmp   X'009A
+     8F4 : 18                         call  8
+     8F5 : 22 18 09                   pli   p2, =X'0918
+     8F8 : 1E                         call  14
+     8F9 : 5E                         pop   p2
+     8FA : 18                         call  8
+     8FB : 5E                         pop   p2
+     8FC : 85 F2                      ld    ea, X'FFF2
+     8FE : 46                         ld    p2, ea
+     8FF : 24 D0 03                   jmp   X'03D1
+     902 : 26 16 09                   ld    p2, =X'0916
+     905 : 1E                         call  14
+     906 : 85 C3                      ld    ea, X'FFC3
+     908 : 14                         call  4
+     909 : 24 FB 04                   jmp   X'04FC
+     90C : 45                         ld    sp, ea
+ins8073_basic.hex: error: Unknown instruction
+     90D : 52
+ins8073_basic.hex: error: Unknown instruction
+     90E : 52
+     90F : 4F                         xch   ea, p3
+     910 : D2 53                      and   a, 83,p2
+     912 : 54                         push  pc
+     913 : 4F                         xch   ea, p3
+     914 : 50                         and   a, e
+     915 : A0 41                      ld    t, X'0957
+     917 : D4 52                      and   a, =X'52
+     919 : 45                         ld    sp, ea
+     91A : 54                         push  pc
+ins8073_basic.hex: error: Unknown instruction
+     91B : 59
+     91C : 50                         and   a, e
+     91D : C5 C5                      ld    a, X'FFC5
+     91F : E6 7C                      xor   a, @124,p2
+ins8073_basic.hex: error: Unknown instruction
+     921 : 05
+     922 : 06                         ld    a, s
+     923 : D4 10                      and   a, =16
+     925 : 6C 01                      bz    X'0928
+     927 : 5C                         ret
+     928 : 24 99 00                   jmp   X'009A
+     92B : 22 00 FD                   pli   p2, =X'FD00
+     92E : C2 00                      ld    a, 0,p2
+     930 : 64 43                      bp    X'0975
+     932 : 5E                         pop   p2
+     933 : 06                         ld    a, s
+     934 : 0A                         push  a
+     935 : 39 FE                      and   s, =X'FE
+     937 : C4 09                      ld    a, =9
+     939 : CD FF                      st    a, X'FFFF
+     93B : 3B 04                      or    s, =4
+     93D : 06                         ld    a, s
+     93E : D4 10                      and   a, =16
+     940 : 7C FB                      bnz   X'093D
+     942 : 20 CD 09                   jsr   X'09CE
+     945 : 06                         ld    a, s
+     946 : D4 10                      and   a, =16
+     948 : 7C F3                      bnz   X'093D
+     94A : 39 FB                      and   s, =X'FB
+     94C : 3B 02                      or    s, =2
+     94E : 20 D5 09                   jsr   X'09D6
+     951 : 00                         nop
+     952 : 00                         nop
+     953 : 9D FF                      dld   a, X'FFFF
+     955 : 6C 15                      bz    X'096C
+     957 : 06                         ld    a, s
+     958 : D4 10                      and   a, =16
+     95A : 3C                         sr    a
+     95B : 3C                         sr    a
+     95C : 3C                         sr    a
+     95D : CD F6                      st    a, X'FFF6
+     95F : 3C                         sr    a
+     960 : 3F                         rrl   a
+     961 : 01                         xch   a, e
+     962 : 3D                         srl   a
+     963 : 01                         xch   a, e
+     964 : 06                         ld    a, s
+     965 : DC 02                      or    a, =2
+     967 : E5 F6                      xor   a, X'FFF6
+     969 : 07                         ld    s, a
+     96A : 74 E2                      bra   X'094E
+     96C : 38                         pop   a
+     96D : D4 F9                      and   a, =X'F9
+     96F : 07                         ld    s, a
+     970 : 40                         ld    a, e
+     971 : D4 7F                      and   a, =X'7F
+     973 : 48                         ld    e, a
+     974 : 5C                         ret
+     975 : 84 F5 09                   ld    ea, =X'09F5
+     978 : 08                         push  ea
+     979 : 82 01                      ld    ea, 1,p2
+     97B : BD E8                      sub   ea, X'FFE8
+     97D : 44                         ld    pc, ea
+     97E : C4 0D                      ld    a, =13
+     980 : 17                         call  7
+     981 : C4 0A                      ld    a, =10
+     983 : 0A                         push  a
+     984 : 22 00 FD                   pli   p2, =X'FD00
+     987 : C2 00                      ld    a, 0,p2
+     989 : 64 32                      bp    X'09BD
+     98B : 5E                         pop   p2
+     98C : 38                         pop   a
+     98D : 0A                         push  a
+     98E : 0E                         sl    a
+     98F : 01                         xch   a, e
+     990 : 06                         ld    a, s
+     991 : 0A                         push  a
+     992 : 39 FA                      and   s, =X'FA
+     994 : 20 D3 09                   jsr   X'09D4
+     997 : 20 D3 09                   jsr   X'09D4
+     99A : 3B 02                      or    s, =2
+     99C : C4 09                      ld    a, =9
+     99E : CD FB                      st    a, X'FFFB
+     9A0 : 20 D3 09                   jsr   X'09D4
+     9A3 : 9D FB                      dld   a, X'FFFB
+     9A5 : 6C 10                      bz    X'09B7
+     9A7 : 40                         ld    a, e
+     9A8 : D4 02                      and   a, =2
+     9AA : CD FF                      st    a, X'FFFF
+     9AC : 40                         ld    a, e
+     9AD : 3C                         sr    a
+     9AE : 48                         ld    e, a
+     9AF : 06                         ld    a, s
+     9B0 : DC 02                      or    a, =2
+     9B2 : E5 FF                      xor   a, X'FFFF
+     9B4 : 07                         ld    s, a
+     9B5 : 74 E9                      bra   X'09A0
+     9B7 : 38                         pop   a
+     9B8 : D4 F9                      and   a, =X'F9
+     9BA : 07                         ld    s, a
+     9BB : 38                         pop   a
+     9BC : 5C                         ret
+     9BD : 82 03                      ld    ea, 3,p2
+     9BF : 46                         ld    p2, ea
+     9C0 : 84 C7 09                   ld    ea, =X'09C7
+     9C3 : 08                         push  ea
+     9C4 : C1 04                      ld    a, 4,sp
+     9C6 : 76 FF                      bra   -1,p2
+     9C8 : 5E                         pop   p2
+     9C9 : 38                         pop   a
+     9CA : 5C                         ret
+     9CB : 08                         push  ea
+     9CC : 74 0B                      bra   X'09D9
+     9CE : 08                         push  ea
+     9CF : 85 EC                      ld    ea, X'FFEC
+     9D1 : 0C                         sr    ea
+     9D2 : 74 05                      bra   X'09D9
+     9D4 : 01                         xch   a, e
+     9D5 : 01                         xch   a, e
+     9D6 : 08                         push  ea
+     9D7 : 85 EC                      ld    ea, X'FFEC
+     9D9 : BD E8                      sub   ea, X'FFE8
+     9DB : 7C FC                      bnz   X'09D9
+     9DD : 01                         xch   a, e
+     9DE : 6C 03                      bz    X'09E3
+     9E0 : 01                         xch   a, e
+     9E1 : 74 F6                      bra   X'09D9
+     9E3 : 3A                         pop   ea
+     9E4 : 5C                         ret
+     9E5 : 22 00 FD                   pli   p2, =X'FD00
+     9E8 : 85 EA                      ld    ea, X'FFEA
+     9EA : C2 00                      ld    a, 0,p2
+     9EC : D4 06                      and   a, =6
+     9EE : B4 F8 09                   add   ea, =X'09F8
+     9F1 : 46                         ld    p2, ea
+     9F2 : 82 00                      ld    ea, 0,p2
+     9F4 : 8D EC                      st    ea, X'FFEC
+     9F6 : 5E                         pop   p2
+     9F7 : 5C                         ret
+ins8073_basic.hex: error: Unknown instruction
+     9F8 : 04
+     9F9 : 00                         nop
+     9FA : 2E                         ssm   p2
+     9FB : 00                         nop
+     9FC : D5 00                      and   a, X'FF00
+ins8073_basic.hex: error: Unknown instruction
+     9FE : 52
+ins8073_basic.hex: error: Unknown instruction
+     9FF : 02

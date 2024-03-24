@@ -1,0 +1,1688 @@
+      cpu   8070
+      org   X'0000
+      nop
+      jmp   X'000A
+      jmp   X'08BA
+      jmp   X'08BF
+      ld    ea, =X'8000
+      st    ea, X'FFD4
+      ld    ea, =X'1000
+      ld    p2, ea
+      jsr   X'0073
+      bnz   X'0013
+      ld    ea, p2
+      sub   ea, =1
+      bnz   X'0013
+      bra   X'0040
+      or    s, =6
+; ins8073_basic.hex: error: Unknown instruction
+;       22 : EE
+      ld    a, s
+      ld    p2, ea
+      push  ea
+; ins8073_basic.hex: error: Unknown instruction
+;       26 : 79
+      ld    a, s
+      and   s, =8
+; ins8073_basic.hex: error: Unknown instruction
+;       2A : 49
+      push  ea
+; ins8073_basic.hex: error: Unknown instruction
+;       2C : 02
+; ins8073_basic.hex: error: Unknown instruction
+;       2D : 02
+      ld    ea, 9,p2
+; ins8073_basic.hex: error: Unknown instruction
+;       30 : 7D
+      ld    t, ea
+      xch   ea, pc
+; ins8073_basic.hex: error: Unknown instruction
+;       33 : 05
+      xch   a, e
+      push  ea
+      call  3
+      ld    a, s
+; ins8073_basic.hex: error: Unknown instruction
+;       38 : 5D
+; ins8073_basic.hex: error: Unknown instruction
+;       39 : 05
+; ins8073_basic.hex: error: Unknown instruction
+;       3A : 94
+; ins8073_basic.hex: error: Unknown instruction
+;       3B : 05
+      rr    a
+; ins8073_basic.hex: error: Unknown instruction
+;       3D : 05
+; ins8073_basic.hex: error: Unknown instruction
+;       3E : CC
+      push  ea
+      st    ea, X'FFC6
+      add   ea, =X'0100
+      st    ea, X'FFD2
+      ld    sp, ea
+      jsr   X'0073
+      bz    X'0048
+      ld    a, @-2,p2
+      ld    ea, p2
+      st    ea, X'FFD8
+      ld    ea, X'FFD4
+      ld    p2, ea
+      jsr   X'0073
+      bz    X'005D
+      jmp   X'01DA
+      ld    ea, X'FFD2
+      sub   ea, X'FFD4
+      ld    a, s
+      bp    X'0068
+      ld    ea, X'FFD2
+      st    ea, X'FFD4
+      ld    a, X'FFC5
+      xor   a, =X'52
+      bz    X'009A
+      jsr   X'05C1
+      bra   X'0091
+      ld    a, @1,p2
+      ld    e, a
+      xor   a, =X'FF
+      st    a, -1,p2
+      xor   a, -1,p2
+      xch   a, e
+      st    a, -1,p2
+      xor   a, -1,p2
+      or    a, e
+      ret
+      jsr   X'05C1
+      ld    a, 0,p2
+      xor   a, =13
+      bz    X'0091
+      call  0
+      call  5
+      jmp   X'000D
+      ld    ea, X'FFD4
+      st    ea, X'FFD6
+      ld    p2, ea
+      ld    a, =X'7F
+      st    a, 0,p2
+      ld    ea, X'FFD2
+      ld    sp, ea
+      ld    ea, X'FFC6
+      add   ea, =X'0034
+      st    ea, X'FFC8
+      ld    p3, ea
+      jsr   X'09E5
+      call  8
+      ld    a, X'FFC2
+      bz    X'00B9
+      ld    ea, p2
+      st    ea, X'FFEE
+      pli   p2, =X'0911
+      call  14
+      pop   p2
+      jsr   X'0902
+      call  8
+      ld    ea, X'FFC8
+      ld    p3, ea
+      ld    ea, =0
+      st    ea, X'FFEA
+      st    a, X'FFC2
+      ld    a, =1
+      st    ea, X'FFE8
+      jsr   X'084D
+      call  9
+      call  13
+      ld    ea, X'FF85
+      and   a, =X'BD
+; ins8073_basic.hex: error: Unknown instruction
+;       D0 : E8
+      sub   ea, X'FFD6
+      ld    a, s
+      bp    X'00D8
+      call  15
+      xch   a, e
+      ld    ea, p2
+      st    ea, X'FFF0
+      jsr   X'016E
+      bnz   X'00FB
+      push  p2
+      jsr   X'0192
+      ld    ea, 0,sp
+      ld    p3, ea
+      ld    ea, p2
+      call  10
+      push  ea
+      add   ea, X'FFE8
+      add   ea, X'FFD6
+      st    ea, X'FFFE
+      pop   ea
+      add   ea, 0,sp
+      add   ea, X'FFD6
+      st    ea, X'FFD6
+      jsr   X'015D
+      pop   p2
+      ld    ea, p2
+      ld    p3, ea
+      ld    ea, X'FFF0
+      ld    p2, ea
+      call  9
+      xor   a, =13
+      bz    X'00B9
+      ld    ea, X'FFD0
+      ld    p2, ea
+      call  9
+      ld    ea, p2
+      st    ea, X'FFF6
+      jsr   X'0192
+      ld    ea, p2
+      sub   ea, X'FFF6
+      st    ea, X'FFFE
+      add   ea, X'FFD6
+      sub   ea, X'FFD8
+      sub   ea, X'FFE8
+      xch   a, e
+      bp    X'015B
+      push  p3
+      ld    ea, X'FFD6
+      ld    p2, ea
+      ld    ea, p3
+      sub   ea, X'FFD6
+      call  10
+      st    ea, X'FFFB
+      or    a, e
+      push  a
+      ld    ea, X'FFD6
+      add   ea, X'FFFE
+      st    ea, X'FFD6
+      ld    p3, ea
+      ld    a, 0,p2
+      st    a, 0,p3
+      pop   a
+      bz    X'0147
+      ld    a, @-1,p2
+      st    a, @-1,p3
+      dld   a, X'FFFB
+      bnz   X'0137
+      ld    a, X'FFFC
+      bz    X'0147
+      dld   a, X'FFFC
+      bra   X'0137
+      pop   p3
+      ld    ea, X'FFF6
+      ld    p2, ea
+      jsr   X'015D
+      jmp   X'00B9
+      ld    a, 0,p2
+      xor   a, =13
+      bz    X'014E
+      pli   p3, =X'0198
+      call  11
+      call  15
+      xch   a, e
+      ld    a, @1,p2
+      st    a, @1,p3
+      dld   a, X'FFFE
+      bnz   X'015D
+      ld    a, X'FFFF
+      bz    X'016D
+      dld   a, X'FFFF
+      bra   X'015D
+      ret
+      ld    ea, X'FFD4
+      ld    p2, ea
+      ld    ea, p2
+      st    ea, X'FFFB
+      call  9
+      call  13
+      call  8
+      call  5
+      sub   ea, -2,p3
+      xch   a, e
+      bp    X'0182
+      jsr   X'0192
+      bra   X'0171
+      or    a, e
+      bz    X'0187
+      ld    a, =1
+      push  a
+      call  5
+      ld    ea, X'FFFB
+      ld    p2, ea
+      pop   a
+      ret
+      ld    a, =X'FF
+      bra   X'0187
+      ld    a, =13
+      ssm   p2
+      bra   X'01AE
+      ret
+      xch   ea, pc
+; ins8073_basic.hex: error: Unknown instruction
+;      199 : 49
+; ins8073_basic.hex: error: Unknown instruction
+;      19A : 53
+      push  pc
+      ild   a, 78,p3
+      ld    sp, ea
+      push  p3
+      st    ea, 82,p2
+; ins8073_basic.hex: error: Unknown instruction
+;      1A2 : 55
+      xch   ea, p2
+      add   ea, X'FF43
+      xch   ea, p3
+      xch   ea, p2
+      push  pc
+      ld    t, @-46,p3
+      jmp   X'0083
+      call  15
+; ins8073_basic.hex: error: Unknown instruction
+;      1AF : 03
+      call  13
+; ins8073_basic.hex: error: Unknown instruction
+;      1B1 : 03
+      bra   X'01B7
+      ld    ea, X'FFEA
+      call  4
+      jsr   X'016E
+      call  9
+      push  p2
+      call  13
+      push  a
+      call  5
+      pop   p2
+      call  14
+      call  8
+      jsr   X'091E
+      bra   X'01BA
+      pop   p2
+      jmp   X'009A
+      push  pc
+      ld    e, a
+      ld    sp, ea
+      xch   ea, p2
+; ins8073_basic.hex: error: Unknown instruction
+;      1CF : AD
+; ins8073_basic.hex: error: Unknown instruction
+;      1D0 : AC
+      ld    ea, X'FFEE
+      ld    p2, ea
+      ld    a, =1
+      st    a, X'FFC2
+      bra   X'0211
+      jsr   X'05C1
+      ld    a, =1
+      st    a, X'FFC2
+      ld    ea, X'FFD4
+      ld    p2, ea
+      bra   X'01EA
+      ld    a, X'FFC2
+      bz    X'01C8
+      ld    ea, X'FFEA
+      call  4
+      jsr   X'0171
+      bp    X'01F8
+      ld    a, =0
+      st    a, X'FFC2
+      bra   X'01C8
+      call  13
+      push  ea
+      call  5
+      st    ea, X'FFC3
+      pli   p3, =X'022E
+      call  11
+      call  15
+; ins8073_basic.hex: error: Unknown instruction
+;      202 : 04
+      pop   ea
+      ld    a, X'FFE7
+      bnz   X'0211
+      ld    a, X'FFC2
+      bz    X'0211
+      ld    ea, X'FFE0
+      or    a, e
+      bnz   X'0225
+      ld    a, =0
+      st    a, X'FFE7
+      jsr   X'091E
+      call  12
+      pop   ea
+; ins8073_basic.hex: error: Unknown instruction
+;      21A : 03
+      bra   X'01FD
+      ld    a, @1,p2
+      xor   a, =13
+      bnz   X'01AE
+      bra   X'01E6
+      ld    ea, X'FFE0
+      call  4
+      ld    ea, X'FFEA
+      st    ea, X'FFE0
+      bra   X'0277
+      xch   ea, pc
+      ld    sp, ea
+      push  pc
+      ld    t, @73,p2
+      ld    p2, ea
+      add   a, 76,p3
+; ins8073_basic.hex: error: Unknown instruction
+;      236 : 49
+      xch   ea, p2
+; ins8073_basic.hex: error: Unknown instruction
+;      238 : 4B
+      add   a, @78,p3
+      ld    sp, ea
+      or    a, e
+      push  pc
+; ins8073_basic.hex: error: Unknown instruction
+;      23E : 9C
+; ins8073_basic.hex: error: Unknown instruction
+;      23F : 55
+      xch   ea, p2
+      push  pc
+; ins8073_basic.hex: error: Unknown instruction
+;      242 : 49
+      xch   ea, pc
+      or    a, 71,p3
+      xch   ea, p3
+      ild   a, @82,p2
+      ld    sp, ea
+      push  pc
+; ins8073_basic.hex: error: Unknown instruction
+;      24B : 55
+; ins8073_basic.hex: error: Unknown instruction
+;      24C : 52
+      xch   ea, p2
+      sub   ea, X'FF52
+      ld    sp, ea
+      xch   ea, sp
+      st    a, @-128,p3
+      pli   p3, =X'02BF
+      call  11
+      jmp   X'045B
+      jmp   X'0369
+      pli   p3, =X'0262
+      call  11
+      push  pc
+      xch   ea, p3
+      ld    ea, X'FF53
+; ins8073_basic.hex: error: Unknown instruction
+;      266 : 55
+; ins8073_basic.hex: error: Unknown instruction
+;      267 : 42
+      st    ea, X'FF80
+      call  0
+      ld    a, =1
+      st    a, X'FFC2
+      jsr   X'016E
+      bz    X'01F8
+      call  15
+      ld    s, a
+      call  0
+      ld    ea, X'FFDE
+      push  p3
+      ld    p3, ea
+      ld    ea, X'FFCC
+      st    a, X'FFF6
+      ld    ea, p3
+      jsr   X'03C1
+      ld    ea, p2
+      st    ea, @2,p3
+      ld    ea, p3
+      st    ea, X'FFDE
+      pop   p3
+      bra   X'026B
+      ld    ea, X'FFDE
+      sub   ea, X'FFCA
+      bz    X'029E
+      ld    ea, X'FFDE
+      sub   ea, =2
+      st    ea, X'FFDE
+      ld    p2, ea
+      ld    ea, 0,p2
+      ld    p2, ea
+      call  6
+      call  15
+      push  ea
+      bra   X'0301
+      jsr   X'0192
+      ld    a, @-1,p2
+      call  6
+      call  0
+      call  5
+      or    a, e
+      bz    X'02A2
+      pli   p3, =X'01CB
+      call  11
+      call  0
+      pli   p2, =X'04C2
+      call  5
+      push  p3
+      push  p2
+      sub   ea, X'FFE8
+      push  ea
+      ld    ea, X'FFC6
+      ld    p2, ea
+      ret
+      ld    p2, ea
+      xch   ea, p3
+; ins8073_basic.hex: error: Unknown instruction
+;      2C1 : 52
+      xor   a, =X'44
+      xch   ea, p3
+      ld    t, @79,p3
+      xch   ea, p2
+      st    ea, @67,p3
+      xch   ea, pc
+      ld    sp, ea
+; ins8073_basic.hex: error: Unknown instruction
+;      2CC : 41
+; ins8073_basic.hex: error: Unknown instruction
+;      2CD : 52
+      ld    ea, X'FF80
+      pli   p3, =X'0423
+      call  11
+      jsr   X'05C6
+      call  6
+      call  0
+      call  12
+      mpy   ea, t
+      xch   a, e
+      call  5
+      and   a, =1
+      bz    X'02E8
+      st    a, X'FFE6
+      call  0
+      call  5
+      st    ea, X'FFE2
+      call  6
+      call  0
+      call  5
+      st    ea, X'FFE4
+      call  6
+      ld    ea, X'FFDA
+      push  p3
+      ld    p3, ea
+      ld    ea, X'FFCE
+      st    a, X'FFF6
+      ld    ea, p3
+      jsr   X'03C1
+      ld    ea, p2
+      st    ea, @2,p3
+      ld    ea, p3
+      pop   p3
+      st    ea, X'FFDA
+      call  6
+      call  0
+      ld    ea, X'FFDA
+      sub   ea, X'FFCC
+      or    a, e
+      bnz   X'030B
+      call  15
+      ld    ea, t
+      call  5
+      or    a, e
+      bz    X'0316
+      ld    ea, X'FFDA
+      sub   ea, =2
+      bra   X'02FE
+      ld    ea, X'FFDA
+      ld    p2, ea
+      ld    ea, -2,p2
+      ld    p2, ea
+      call  6
+; ins8073_basic.hex: error: Unknown instruction
+;      31D : 53
+      push  pc
+      ld    sp, ea
+      and   a, e
+      ild   a, @-104,p2
+      push  pc
+      xch   ea, p3
+      st    ea, X'FFFD
+      jsr   X'056D
+; ins8073_basic.hex: error: Unknown instruction
+;      32A : 7A
+      call  12
+      srl   a
+      bra   16,p3
+      pli   p3, =X'0323
+      call  11
+      call  0
+      pli   p3, =X'031D
+      call  11
+      call  0
+      bra   X'033F
+      ld    ea, X'FFE8
+      st    ea, @2,p3
+      ld    ea, X'FFDC
+      push  p2
+      ld    p2, ea
+      ld    ea, X'FFD0
+      st    a, X'FFF6
+      ld    ea, p2
+      jsr   X'03C1
+      call  5
+      st    ea, @2,p2
+      call  5
+      st    ea, @2,p2
+      call  5
+      ld    t, ea
+      call  5
+      st    ea, X'FFF6
+      st    a, @1,p2
+      ld    ea, 0,sp
+      st    ea, @2,p2
+      ld    ea, p2
+      st    ea, X'FFDC
+      ld    ea, X'FFF6
+      ld    p2, ea
+      ld    ea, t
+      st    ea, 0,p2
+      pop   p2
+      call  6
+      call  15
+      push  a
+      jsr   X'056D
+      pop   a
+      call  5
+      ld    t, ea
+      ld    ea, X'FFDC
+      sub   ea, X'FFCE
+      bz    X'0367
+      ld    ea, X'FFDC
+      sub   ea, =7
+      st    ea, X'FFDC
+      push  p2
+      ld    p2, ea
+      ld    ea, t
+      sub   a, 4,p2
+      bz    X'0386
+      pop   p2
+      bra   X'036F
+      ld    a, 1,p2
+      bp    X'0393
+      jsr   X'03A6
+      xor   a, =X'FF
+      bz    X'0398
+      bra   X'0396
+      jsr   X'03A6
+      bp    X'0365
+      ld    ea, 5,p2
+      pop   p2
+      ld    p2, ea
+      ld    ea, X'FFDC
+      add   ea, =7
+      st    ea, X'FFDC
+      call  6
+      call  15
+; ins8073_basic.hex: error: Unknown instruction
+;      3A5 : 04
+      ld    ea, X'FFC6
+      ld    a, 4,p2
+      push  p3
+      ld    p3, ea
+      ld    ea, 0,p3
+      add   ea, 0,p2
+      st    ea, 0,p3
+      pop   p3
+      sub   ea, 2,p2
+      bz    X'03BB
+      xch   a, e
+      and   a, =X'80
+      ret
+      xch   a, e
+      bnz   X'03B8
+      ld    a, =X'FF
+      ret
+      sub   a, X'FFF6
+      bp    X'03C6
+      ret
+      call  15
+      ld    t, ea
+      call  15
+; ins8073_basic.hex: error: Unknown instruction
+;      3C9 : 02
+      ld    a, X'FFC2
+      bz    X'03C8
+      ld    ea, p2
+      st    ea, X'FFF2
+      jsr   X'056D
+; ins8073_basic.hex: error: Unknown instruction
+;      3D4 : 29
+      ld    a, =3
+      jsr   X'041B
+      jsr   X'084D
+      call  0
+      call  5
+      ld    t, ea
+      call  5
+      push  p3
+      ld    p3, ea
+      ld    ea, t
+      st    ea, 0,p3
+      pop   p3
+      ld    a, =1
+      jsr   X'041B
+      call  12
+      mpy   ea, t
+      mpy   ea, t
+      jsr   X'056D
+      and   a, @-60,p2
+; ins8073_basic.hex: error: Unknown instruction
+;      3F4 : 03
+      jsr   X'041B
+      call  12
+      mpy   ea, t
+      xch   a, e
+      bra   X'03DD
+      call  12
+      jmp   X'11CA
+      ld    a, =3
+      jsr   X'041B
+      jsr   X'084D
+      call  5
+      push  p3
+      ld    p3, ea
+      ld    a, @1,p2
+      st    a, @1,p3
+      xor   a, =13
+      bnz   X'040C
+      pop   p3
+      ld    a, =1
+      jsr   X'041B
+      call  6
+      st    a, X'FFC2
+      ld    ea, X'FFF0
+      xch   ea, p2
+      st    ea, X'FFF0
+      ret
+      ld    pc, ea
+      ld    sp, ea
+      xch   ea, pc
+; ins8073_basic.hex: error: Unknown instruction
+;      426 : 41
+; ins8073_basic.hex: error: Unknown instruction
+;      427 : 59
+      dld   a, 73,p2
+      xch   ea, p2
+      and   a, e
+; ins8073_basic.hex: error: Unknown instruction
+;      42C : 55
+      push  pc
+      st    ea, @80,p3
+; ins8073_basic.hex: error: Unknown instruction
+;      430 : 52
+; ins8073_basic.hex: error: Unknown instruction
+;      431 : 49
+      xch   ea, p2
+      push  pc
+      st    ea, 80,p3
+; ins8073_basic.hex: error: Unknown instruction
+;      436 : 52
+      st    ea, X'048B
+      push  pc
+      xch   ea, p3
+      and   a, e
+      ild   a, -99,sp
+      bra   X'03CA
+      jmp   X'04CA
+      call  0
+      call  5
+      ld    t, =X'003F
+      mpy   ea, t
+      ld    ea, t
+      jsr   X'09CB
+      call  6
+      jmp   X'009A
+; ins8073_basic.hex: error: Unknown instruction
+;      451 : 53
+      push  pc
+; ins8073_basic.hex: error: Unknown instruction
+;      453 : 41
+      push  pc
+      st    ea, 64,sp
+      ild   a, 36,p2
+      add   ea, -98,sp
+      pli   p3, =X'0451
+      call  11
+      call  12
+      srl   a
+      bp    16,p3
+      call  5
+      ld    s, a
+      ld    a, =1
+      st    a, X'FFE7
+      call  6
+      call  1
+      call  12
+      srl   a
+; ins8073_basic.hex: error: Unknown instruction
+;      46D : 5B
+      call  0
+      call  5
+      ld    t, ea
+      call  5
+      push  p3
+      ld    p3, ea
+      ld    ea, t
+      st    a, 0,p3
+      pop   p3
+      call  6
+      jsr   X'056D
+      xch   ea, pc
+      call  12
+      srl   a
+; ins8073_basic.hex: error: Unknown instruction
+;      47F : 49
+      call  0
+      call  5
+      ld    t, ea
+      call  5
+      push  p3
+      ld    p3, ea
+      ld    ea, t
+      st    ea, 0,p3
+      pop   p3
+      call  6
+      call  1
+      call  12
+      srl   a
+      pop   ea
+      ld    a, 0,p2
+      xor   a, =X'22
+      bnz   X'04B1
+      ld    a, @1,p2
+      call  5
+      push  p3
+      ld    p3, ea
+      ld    a, @1,p2
+      xor   a, =X'22
+      bz    X'04AA
+      xor   a, =X'2F
+      bz    X'04C6
+      xor   a, =13
+      st    a, @1,p3
+      bra   X'049A
+      ld    a, =13
+      st    a, 0,p3
+      pop   p3
+      call  9
+      call  6
+      call  12
+      jmp   X'1116
+      call  5
+      push  p2
+      ld    p2, ea
+      call  5
+      push  p3
+      ld    p3, ea
+      ld    a, @1,p2
+      st    a, @1,p3
+      xor   a, =13
+      bnz   X'04BB
+      pop   p3
+      pop   p2
+      call  6
+      call  15
+      ld    a, s
+      call  15
+; ins8073_basic.hex: error: Unknown instruction
+;      4C9 : 04
+      ld    a, 0,p2
+      xor   a, =X'22
+      bnz   X'04E1
+      ld    a, @1,p2
+      ld    a, @1,p2
+      xor   a, =X'22
+      bz    X'04F0
+      xor   a, =X'2F
+      bz    X'04C6
+      xor   a, =13
+      call  7
+      bra   X'04D2
+      call  12
+      jmp   X'110A
+      call  5
+      push  p2
+      ld    p2, ea
+      call  14
+      pop   p2
+      bra   X'04F0
+      call  0
+      jsr   X'04FC
+      call  9
+      call  12
+      mpy   ea, t
+; ins8073_basic.hex: error: Unknown instruction
+;      4F3 : 03
+      bra   X'04CA
+      call  12
+      or    s, =2
+      call  6
+      call  8
+      call  6
+      ld    ea, -2,p3
+      xch   a, e
+      bp    X'050A
+      xch   a, e
+      call  10
+      st    ea, -2,p3
+      ld    a, =X'2D
+      call  7
+      bra   X'050D
+      ld    a, =32
+      call  7
+      ld    a, =0
+      st    a, X'FFFE
+      call  5
+      pli   p3, =X'FFF6
+      ld    t, =10
+      st    ea, X'FFFC
+      div   ea, t
+      push  ea
+      ld    t, =10
+      mpy   ea, t
+      ld    ea, t
+      call  10
+      add   ea, X'FFFC
+      st    a, @1,p3
+      ild   a, X'FFFE
+      pop   ea
+      bnz   X'0515
+      xch   a, e
+      bz    X'0531
+      xch   a, e
+      bra   X'0515
+      ld    a, @-1,p3
+      add   a, =X'30
+      call  7
+      dld   a, X'FFFE
+      bnz   X'0531
+      ld    a, =32
+      call  7
+      pop   p3
+      ret
+      ld    a, @1,p2
+      xor   a, =13
+      bz    X'054A
+      xor   a, =13
+      call  7
+      bp    X'053F
+      ret
+      ld    a, @1,p2
+      ld    a, 0,p2
+      and   a, =X'7F
+      ld    e, a
+      xor   a, =32
+      bz    X'054B
+      xor   a, =X'2A
+      bz    X'054B
+      ld    a, e
+      bz    X'054B
+      ret
+      pop   ea
+      add   ea, X'FFE8
+      push  ea
+      push  p3
+      ld    p3, ea
+      ld    a, 0,p3
+      xor   a, 0,p2
+      pop   p3
+      bz    X'058E
+      bra   X'0579
+      ld    a, 0,p2
+      ld    e, a
+      sub   a, =X'5B
+      bp    X'0579
+      ld    a, e
+      sub   a, =X'41
+      bp    X'0586
+      pop   ea
+      st    ea, X'FFF6
+      push  p3
+      ld    p3, ea
+      ld    ea, X'FFEA
+      ld    a, 1,p3
+      add   ea, X'FFF6
+      pop   p3
+      ld    pc, ea
+      sl    a
+      xch   a, e
+      ld    a, =0
+      xch   a, e
+      add   ea, X'FFC6
+      call  4
+      ld    a, @1,p2
+      call  9
+      pop   ea
+      add   ea, X'FFE8
+      ld    pc, ea
+      ld    a, 0,p2
+      bnd   X'0579
+      ld    ea, X'FFEA
+      st    ea, X'FFF6
+      ld    t, ea
+      ld    a, @1,p2
+      bnd   X'05BB
+      st    a, X'FFF6
+      ld    ea, =10
+      mpy   ea, t
+      or    a, e
+      bnz   X'05B9
+      ld    ea, t
+      add   ea, X'FFF6
+      ld    t, ea
+      ld    a, e
+      bp    X'05B4
+      bra   X'05B9
+      ld    a, s
+      and   a, =X'C0
+      bz    X'059E
+      call  15
+; ins8073_basic.hex: error: Unknown instruction
+;      5BA : 05
+      ld    a, @-1,p2
+      ld    ea, t
+      call  4
+      bra   X'0590
+      ld    ea, =0
+      st    ea, X'FFC3
+      ld    ea, X'FFC6
+      add   ea, =X'0034
+      st    ea, X'FFC8
+      add   ea, =26
+      st    ea, X'FFCA
+      st    ea, X'FFDE
+      add   ea, =16
+      st    ea, X'FFCC
+      st    ea, X'FFDA
+      add   ea, =16
+      st    ea, X'FFCE
+      st    ea, X'FFDC
+      add   ea, =28
+      st    ea, X'FFD0
+      jsr   X'09E5
+      ld    a, =X'34
+      st    a, X'FFF6
+      ld    ea, X'FFC6
+      ld    p3, ea
+      ld    ea, =0
+      st    ea, X'FFEA
+      st    ea, X'FFE0
+      st    ea, X'FFE2
+      st    ea, X'FFE4
+      st    ea, X'FFC0
+      st    a, X'FFE6
+      ld    a, =0
+      st    a, @1,p3
+      dld   a, X'FFF6
+      bnz   X'0600
+      ld    a, =1
+      st    ea, X'FFE8
+      ld    ea, X'FFC8
+      ld    p3, ea
+      ld    a, =X'52
+      st    a, X'FFC5
+      ret
+      pop   ea
+      push  p2
+      ld    a, @1,p3
+      bp    X'062F
+      bra   X'0621
+      ld    a, @1,p3
+      bp    X'062F
+      call  9
+      pop   ea
+      ld    ea, X'FFEA
+      ld    a, @-1,p3
+      and   a, =X'7F
+      st    ea, X'FFF6
+      ld    ea, p3
+      add   ea, X'FFF6
+      pop   p3
+      ld    pc, ea
+      xor   a, @1,p2
+      and   a, =X'7F
+      bz    X'061C
+      pop   p2
+      ld    a, @1,p3
+      bp    X'0636
+      bra   X'0615
+      jsr   X'068F
+      pli   p3, =X'0643
+      call  11
+      srl   a
+      st    ea, @60,p2
+      srl   a
+      ild   a, X'0684
+      rr    a
+      ild   a, 60,p2
+      ild   a, X'FF3E
+      srl   a
+      ild   a, @62,p3
+      dld   a, -90,p2
+      call  3
+      and   a, =2
+      bra   X'066F
+      call  3
+      and   a, =X'82
+      bra   X'066F
+      call  3
+      and   a, =X'81
+      bra   X'066F
+      call  3
+      and   a, =X'80
+      bra   X'066F
+      call  3
+      and   a, =3
+      bra   X'066F
+      call  3
+      and   a, =1
+      bz    X'0676
+      ld    ea, =X'FFFF
+      call  4
+      ret
+      ld    ea, X'FFEA
+      call  4
+      ret
+      jsr   X'068F
+      call  2
+      sub   ea, X'FFF6
+      xch   a, e
+      bp    X'0686
+      ld    a, =X'80
+      ret
+      or    a, e
+      bz    X'068C
+      ld    a, =1
+      ret
+      ld    a, =2
+      ret
+      call  12
+      bnd   X'069B
+      jsr   X'06C8
+      call  5
+      call  10
+      call  4
+      bra   X'06A0
+      call  12
+; ins8073_basic.hex: error: Unknown instruction
+;      69B : 2B
+      xch   a, e
+      jsr   X'06C8
+      pli   p3, =X'06A4
+      call  11
+; ins8073_basic.hex: error: Unknown instruction
+;      6A4 : 2B
+      ld    ea, @45,p2
+; ins8073_basic.hex: error: Unknown instruction
+;      6A7 : 8C
+      xch   ea, p3
+; ins8073_basic.hex: error: Unknown instruction
+;      6A9 : 52
+      ild   a, -59,sp
+      jsr   X'06C8
+      call  2
+      add   ea, X'FFF6
+      bra   X'0697
+      jsr   X'06C8
+      call  2
+      sub   ea, X'FFF6
+      bra   X'0697
+      jsr   X'06C8
+      call  2
+      or    a, X'FFF6
+      xch   a, e
+      or    a, X'FFF7
+      xch   a, e
+      bra   X'0697
+      call  1
+      pli   p3, =X'06CD
+      call  11
+; ins8073_basic.hex: error: Unknown instruction
+;      6CD : 2A
+      ld    ea, @47,p3
+      st    ea, X'FF41
+      xch   ea, p2
+      ld    pc, ea
+      ild   a, X'0670
+      call  1
+      call  2
+      jsr   X'07F5
+      call  4
+      bra   X'06C9
+      call  1
+      call  2
+      jsr   X'080D
+      bra   X'06DB
+      call  1
+      call  2
+      and   a, X'FFF6
+      xch   a, e
+      and   a, X'FFF7
+      xch   a, e
+      bra   X'06DB
+      call  13
+; ins8073_basic.hex: error: Unknown instruction
+;      6F0 : 02
+      ret
+      pli   p3, =X'06F6
+      call  11
+; ins8073_basic.hex: error: Unknown instruction
+;      6F6 : 28
+      add   ea, 64,p2
+      add   ea, @35,p3
+      xor   a, X'FF4E
+      xch   ea, p3
+      push  pc
+      add   ea, @83,p3
+      push  pc
+; ins8073_basic.hex: error: Unknown instruction
+;      702 : 41
+      push  pc
+      sub   ea, =X'4F54
+      and   a, e
+      sub   ea, 73,p3
+      xch   ea, p2
+; ins8073_basic.hex: error: Unknown instruction
+;      70B : 43
+      sub   ea, X'FF44
+      ld    sp, ea
+; ins8073_basic.hex: error: Unknown instruction
+;      70F : 43
+      ld    a, 77,p2
+      xch   ea, p3
+      ld    pc, ea
+      st    a, @82,p2
+      xch   ea, p2
+      ld    pc, ea
+      xor   a, X'FF80
+      jsr   X'056D
+      call  2
+      jsr   X'0723
+      call  4
+      ret
+      call  5
+      push  p3
+      ld    p3, ea
+      ld    ea, 0,p3
+      pop   p3
+      ret
+      call  0
+      call  12
+; ins8073_basic.hex: error: Unknown instruction
+;      72C : 29
+; ins8073_basic.hex: error: Unknown instruction
+;      72D : 02
+      ret
+      call  15
+; ins8073_basic.hex: error: Unknown instruction
+;      730 : 04
+      call  1
+      jsr   X'0723
+      bra   X'075B
+      call  1
+      call  5
+      xor   a, =X'FF
+      xch   a, e
+      xor   a, =X'FF
+      xch   a, e
+      call  4
+      ret
+      ld    a, s
+      bra   X'075B
+      ld    ea, X'FFD6
+      add   ea, X'FFE8
+      call  4
+      ret
+      jsr   X'07A3
+      push  p2
+      ld    p2, ea
+      ild   a, 0,p2
+      bra   X'075A
+      jsr   X'07A3
+      push  p2
+      ld    p2, ea
+      dld   a, 0,p2
+      pop   p2
+      xch   a, e
+      ld    a, =0
+      xch   a, e
+      call  4
+      ret
+      bra   X'07BA
+      jsr   X'07AC
+      call  2
+      ld    t, ea
+      ld    ea, X'FFF6
+      st    ea, X'FFFE
+      ld    ea, t
+      st    ea, X'FFFC
+      jsr   X'080D
+      st    ea, X'FFF6
+      ld    ea, X'FFFE
+      jsr   X'07F5
+      call  10
+      add   ea, X'FFFC
+      call  4
+      ret
+      jsr   X'07AC
+      ld    t, X'FFF4
+      ld    ea, =X'0485
+      mpy   ea, t
+      ld    ea, t
+      add   ea, =X'3619
+      st    ea, X'FFF4
+      call  5
+      add   ea, X'FFE8
+      sub   ea, -2,p3
+      st    ea, X'FFF6
+      ld    ea, X'FFF4
+      xch   a, e
+      and   a, =X'7F
+      xch   a, e
+      jsr   X'0767
+      call  5
+      add   ea, -2,p3
+      st    ea, -2,p3
+      ret
+      call  12
+; ins8073_basic.hex: error: Unknown instruction
+;      7A4 : 28
+      call  3
+      call  0
+      call  12
+; ins8073_basic.hex: error: Unknown instruction
+;      7A8 : 29
+      sl    ea
+      call  5
+      ret
+      call  12
+; ins8073_basic.hex: error: Unknown instruction
+;      7AD : 28
+      push  a
+      call  0
+      call  12
+      mpy   ea, t
+      ld    a, s
+      call  0
+      call  12
+; ins8073_basic.hex: error: Unknown instruction
+;      7B5 : 29
+; ins8073_basic.hex: error: Unknown instruction
+;      7B6 : 02
+      ret
+      call  15
+; ins8073_basic.hex: error: Unknown instruction
+;      7B9 : 04
+      ld    ea, X'FFEA
+      st    ea, X'FFF6
+      ld    t, ea
+      ld    a, @1,p2
+      bnd   X'07C5
+      bra   X'07DF
+      jsr   X'07EB
+      bp    X'07DD
+      call  15
+; ins8073_basic.hex: error: Unknown instruction
+;      7CB : 05
+      ld    a, @1,p2
+      bnd   X'07D2
+      bra   X'07DF
+      jsr   X'07EB
+      bp    X'07DD
+      ld    ea, t
+      call  4
+      ld    a, @-1,p2
+      call  9
+      ret
+      add   a, =10
+      st    a, X'FFF6
+      ld    ea, t
+      sl    ea
+      sl    ea
+      sl    ea
+      sl    ea
+      add   ea, X'FFF6
+      ld    t, ea
+      bra   X'07CC
+      sub   a, =X'47
+      bp    X'07F2
+      add   a, =6
+      ret
+      ld    a, =X'FF
+      ret
+      jsr   X'081F
+      ld    t, X'FFF6
+      mpy   ea, t
+      st    ea, X'FFC0
+      ld    a, X'FFFB
+      bp    X'080B
+      ld    ea, t
+      xor   a, =X'FF
+      xch   a, e
+      xor   a, =X'FF
+      xch   a, e
+      add   ea, X'FFE8
+      ret
+      ld    ea, t
+      ret
+      jsr   X'081F
+      ld    t, ea
+      ld    ea, X'FFF6
+      or    a, e
+      bz    X'081D
+      ld    ea, t
+      ld    t, X'FFF6
+      div   ea, t
+      ld    t, ea
+      bra   X'07FD
+      call  15
+      sr    ea
+      ld    t, ea
+      ld    a, X'FFF7
+      st    a, X'FFFB
+      bp    X'082B
+      ld    ea, X'FFF6
+      call  10
+      st    ea, X'FFF6
+      ld    ea, t
+      ld    a, e
+      xor   a, X'FFFB
+      st    a, X'FFFB
+      ld    ea, t
+      xch   a, e
+      bp    X'0838
+      xch   a, e
+      call  10
+      ret
+      xch   a, e
+      ret
+      push  ea
+      ld    ea, p3
+      sub   ea, X'FFCA
+      xch   a, e
+      bp    X'0845
+      pop   ea
+      st    ea, @2,p3
+      ret
+      call  15
+      ld    t, ea
+      call  5
+      st    ea, X'FFF6
+      ld    ea, @-2,p3
+      ret
+      ld    ea, X'FFD0
+      ld    p2, ea
+      ld    a, =0
+      st    a, X'FFFE
+      ld    a, X'FFC2
+      bz    X'085F
+      ld    a, =X'3F
+      call  7
+      ld    a, =32
+      bra   X'0861
+      ld    a, =X'3E
+      call  7
+      jsr   X'092B
+      bz    X'0862
+      ld    e, a
+      xor   a, =10
+      bz    X'0862
+      xor   a, =7
+      bz    X'08AF
+      xor   a, =X'52
+      bz    X'0899
+      xor   a, =X'57
+      bz    X'0893
+      xor   a, =29
+      bz    X'088A
+      xor   a, =22
+      bnz   X'08A3
+      ld    a, =X'5E
+      call  7
+      ld    a, =X'43
+      call  7
+      call  8
+      jmp   X'009A
+      ld    a, =X'5E
+      call  7
+      ld    a, =X'55
+      call  7
+      call  8
+      bra   X'084D
+      ld    a, =32
+      call  7
+      ld    a, =8
+      call  7
+      ld    a, X'FFFE
+      bz    X'0862
+      dld   a, X'FFFE
+      ld    a, @-1,p2
+      bra   X'0862
+      ld    a, e
+      st    a, @1,p2
+      ild   a, X'FFFE
+      xor   a, =X'49
+      bnz   X'0862
+      ld    a, =13
+      call  7
+      ld    a, =13
+      st    a, @1,p2
+      ld    a, =10
+      call  7
+      ld    ea, X'FFD0
+      ld    p2, ea
+      ret
+      push  ea
+      ld    ea, X'FFE2
+      bra   X'08C2
+      push  ea
+      ld    ea, X'FFE4
+      st    ea, X'FFE0
+      or    a, e
+      bz    X'08C9
+      pop   ea
+      ret
+      pop   ea
+      or    s, =1
+      ret
+      pop   ea
+      ld    p3, ea
+      push  p2
+      ld    p2, =X'090C
+      call  14
+      ld    ea, X'FFEA
+      ld    a, 1,p3
+      ld    p3, ea
+      ld    ea, X'FFC8
+      xch   ea, p3
+      call  4
+      jsr   X'04FC
+      ld    a, X'FFC2
+      bz    X'08EB
+      xor   a, =3
+      bz    X'08F4
+      jsr   X'0902
+      call  8
+      pop   p2
+      ld    a, =0
+      st    a, X'FFC2
+      jmp   X'009A
+      call  8
+      pli   p2, =X'0918
+      call  14
+      pop   p2
+      call  8
+      pop   p2
+      ld    ea, X'FFF2
+      ld    p2, ea
+      jmp   X'03D1
+      ld    p2, =X'0916
+      call  14
+      ld    ea, X'FFC3
+      call  4
+      jmp   X'04FC
+      ld    sp, ea
+; ins8073_basic.hex: error: Unknown instruction
+;      90D : 52
+; ins8073_basic.hex: error: Unknown instruction
+;      90E : 52
+      xch   ea, p3
+      and   a, 83,p2
+      push  pc
+      xch   ea, p3
+      and   a, e
+      ld    t, X'0957
+      and   a, =X'52
+      ld    sp, ea
+      push  pc
+; ins8073_basic.hex: error: Unknown instruction
+;      91B : 59
+      and   a, e
+      ld    a, X'FFC5
+      xor   a, @124,p2
+; ins8073_basic.hex: error: Unknown instruction
+;      921 : 05
+      ld    a, s
+      and   a, =16
+      bz    X'0928
+      ret
+      jmp   X'009A
+      pli   p2, =X'FD00
+      ld    a, 0,p2
+      bp    X'0975
+      pop   p2
+      ld    a, s
+      push  a
+      and   s, =X'FE
+      ld    a, =9
+      st    a, X'FFFF
+      or    s, =4
+      ld    a, s
+      and   a, =16
+      bnz   X'093D
+      jsr   X'09CE
+      ld    a, s
+      and   a, =16
+      bnz   X'093D
+      and   s, =X'FB
+      or    s, =2
+      jsr   X'09D6
+      nop
+      nop
+      dld   a, X'FFFF
+      bz    X'096C
+      ld    a, s
+      and   a, =16
+      sr    a
+      sr    a
+      sr    a
+      st    a, X'FFF6
+      sr    a
+      rrl   a
+      xch   a, e
+      srl   a
+      xch   a, e
+      ld    a, s
+      or    a, =2
+      xor   a, X'FFF6
+      ld    s, a
+      bra   X'094E
+      pop   a
+      and   a, =X'F9
+      ld    s, a
+      ld    a, e
+      and   a, =X'7F
+      ld    e, a
+      ret
+      ld    ea, =X'09F5
+      push  ea
+      ld    ea, 1,p2
+      sub   ea, X'FFE8
+      ld    pc, ea
+      ld    a, =13
+      call  7
+      ld    a, =10
+      push  a
+      pli   p2, =X'FD00
+      ld    a, 0,p2
+      bp    X'09BD
+      pop   p2
+      pop   a
+      push  a
+      sl    a
+      xch   a, e
+      ld    a, s
+      push  a
+      and   s, =X'FA
+      jsr   X'09D4
+      jsr   X'09D4
+      or    s, =2
+      ld    a, =9
+      st    a, X'FFFB
+      jsr   X'09D4
+      dld   a, X'FFFB
+      bz    X'09B7
+      ld    a, e
+      and   a, =2
+      st    a, X'FFFF
+      ld    a, e
+      sr    a
+      ld    e, a
+      ld    a, s
+      or    a, =2
+      xor   a, X'FFFF
+      ld    s, a
+      bra   X'09A0
+      pop   a
+      and   a, =X'F9
+      ld    s, a
+      pop   a
+      ret
+      ld    ea, 3,p2
+      ld    p2, ea
+      ld    ea, =X'09C7
+      push  ea
+      ld    a, 4,sp
+      bra   -1,p2
+      pop   p2
+      pop   a
+      ret
+      push  ea
+      bra   X'09D9
+      push  ea
+      ld    ea, X'FFEC
+      sr    ea
+      bra   X'09D9
+      xch   a, e
+      xch   a, e
+      push  ea
+      ld    ea, X'FFEC
+      sub   ea, X'FFE8
+      bnz   X'09D9
+      xch   a, e
+      bz    X'09E3
+      xch   a, e
+      bra   X'09D9
+      pop   ea
+      ret
+      pli   p2, =X'FD00
+      ld    ea, X'FFEA
+      ld    a, 0,p2
+      and   a, =6
+      add   ea, =X'09F8
+      ld    p2, ea
+      ld    ea, 0,p2
+      st    ea, X'FFEC
+      pop   p2
+      ret
+; ins8073_basic.hex: error: Unknown instruction
+;      9F8 : 04
+      nop
+      ssm   p2
+      nop
+      and   a, X'FF00
+; ins8073_basic.hex: error: Unknown instruction
+;      9FE : 52
+; ins8073_basic.hex: error: Unknown instruction
+;      9FF : 02
