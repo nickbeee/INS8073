@@ -1,0 +1,1717 @@
+ AS V1.42 Beta [Bld 265] - Source File unimon_ins8070.asm - Page 1 - 24/03/24 16:23:50
+
+
+       1/       0 :                     ;;;
+       2/       0 :                     ;;; Universal Monitor INS8070 (SC/MP III)
+       3/       0 :                     ;;;   Copyright (C) 2021  Haruo Asano
+       4/       0 :                     ;;;
+       5/       0 :                     
+       6/   0 :                         	CPU	8070
+       7/   0 :                         
+       8/   0 :                         
+       9/   0 :                         	INCLUDE	"config.inc"
+(1)    1/   0 :                         ;;; -*- asm -*-
+(1)    2/   0 :                         ;;;
+(1)    3/   0 :                         ;;; Universal Monitor INS8070 config file (INS8073 with default software UART)
+(1)    4/   0 :                         ;;;
+(1)    5/   0 :                         
+(1)    6/   0 :                         ;;;
+(1)    7/   0 :                         ;;; Memory
+(1)    8/   0 :                         ;;;
+(1)    9/   0 :                         
+(1)   10/   0 : =0x8800                 ROM_B:	EQU	0x8800
+(1)   11/   0 : =0x7800                 RAM_B:	EQU	0x7800
+(1)   12/   0 : =0x7FC0                 WORK_B:	equ	0x7FC0
+(1)   13/   0 : =0x7F00                 STACK:	equ	0x7F00
+(1)   14/   0 :                         
+(1)   15/   0 : =0x10                   BUFLEN:	equ	16
+(1)   16/   0 :                         
+(1)   17/   0 :                         ;;;
+(1)   18/   0 :                         ;;; Options
+(1)   19/   0 :                         ;;;
+(1)   20/   0 :                         
+(1)   21/   0 : =0x1                    USE_REGCMD = 1			; R(egister) command and related functions
+(1)   22/   0 :                         
+(1)   23/   0 : =0x1                    FOR_INS8073 = 1			; Called from BASIC (do not initialize SP)
+(1)   24/   0 :                         
+(1)   25/   0 : =0x0                    CONSOLE_FOR_BASIC = 0		; Make BASIC use dev/dev_xxxx as console
+(1)   26/   0 :                         	
+(1)   27/   0 :                         ;;;
+(1)   28/   0 :                         ;;; EMILY Board (Shared Memory)
+(1)   29/   0 :                         ;;; 
+(1)   30/   0 :                         
+(1)   31/   0 : =0x0                    USE_DEV_EMILY = 0
+(1)   32/   0 : =>FALSE                 	IF USE_DEV_EMILY
+(1)   33/   0 :                         SMBASE:	EQU	0x1FF0
+(1)   34/   0 : [32]                    	ENDIF
+(1)   35/   0 :                         
+(1)   36/   0 :                         ;;;
+(1)   37/   0 :                         ;;; INS8073  (Call routine in NSC Tiny BASIC ROM)
+(1)   38/   0 :                         ;;;
+(1)   39/   0 :                         
+(1)   40/   0 : =0x1                    USE_DEV_INS8073 = 1
+(1)   41/   0 : =>TRUE                  	IF USE_DEV_INS8073
+(1)   42/   0 : =0x1                    MEMREQ = 1
+(1)   43/   0 : [41]                    	ENDIF
+(1)   44/   0 :                         
+      10/   0 :                         
+      11/   0 :                         	INCLUDE	"../common.inc"
+(1)    1/   0 :                         ;;; -*- asm -*-
+(1)    2/   0 :                         ;;;
+(1)    3/   0 :                         ;;; Common header file
+(1)    4/   0 :                         ;;;
+(1)    5/   0 :                         
+ AS V1.42 Beta [Bld 265] - Source File unimon_ins8070.asm(common.inc) - Page 2 - 24/03/24 16:23:50
+
+
+(1)    6/   0 :                         	RELAXED	ON
+(1)    7/   0 :                         
+(1)    8/   0 :                         ;;; Constants
+(1)    9/   0 : =0xD                    CR:	EQU	0x0D
+(1)   10/   0 : =0xA                    LF:	EQU	0x0A
+(1)   11/   0 : =0x8                    BS:	EQU	0x08
+(1)   12/   0 : =0x7F                   DEL:	EQU	0x7F
+(1)   13/   0 :                         
+(1)   14/   0 :                         ;;; Functions
+(1)   15/   0 :                         low	function	x,(x & 255)
+(1)   16/   0 :                         high	function	x,(x >> 8)
+(1)   17/   0 :                         
+(1)   18/   0 :                         	RELAXED	OFF
+(1)   19/   0 :                         
+      12/   0 :                         
+      13/   0 :                         ;;;
+      14/   0 :                         ;;; ROM	area
+      15/   0 :                         ;;;
+      16/   0 :                         
+      17/8800 :                         	ORG	ROM_B
+      18/8800 :                         	
+      19/8800 : 00                      	NOP			; Dummy
+      20/8801 : 24 03 88                	JMP	CSTART		; Reset
+      21/8804 :                         
+      22/8804 : =>FALSE                 	IF ROM_B = 0x0000
+      23/8804 :                         	;; Fixed address area
+      24/8804 :                         	JMP	DUMMY		; INTA
+      25/8804 :                         	JMP	DUMMY		; INTB
+      26/8804 :                         
+      27/8804 :                         	;; CALL vector
+      28/8804 :                         	ORG	0x0020
+      29/8804 :                         	
+      30/8804 :                         	DW	DUMMY-1		; CALL 0
+      31/8804 :                         	DW	DUMMY-1
+      32/8804 :                         	DW	DUMMY-1
+      33/8804 :                         	DW	DUMMY-1
+      34/8804 :                         
+      35/8804 :                         	DW	DUMMY-1		; CALL 4
+      36/8804 :                         	DW	DUMMY-1
+      37/8804 :                         	DW	DUMMY-1
+      38/8804 :                         	DW	DUMMY-1
+      39/8804 :                         
+      40/8804 :                         	DW	DUMMY-1		; CALL 8
+      41/8804 :                         	DW	DUMMY-1
+      42/8804 :                         	DW	DUMMY-1
+      43/8804 :                         	DW	DUMMY-1
+      44/8804 :                         
+      45/8804 :                         	DW	DUMMY-1		; CALL 12
+      46/8804 :                         	DW	DUMMY-1
+      47/8804 :                         	DW	DUMMY-1
+      48/8804 :                         	DW	BREAK-1		; BREAK
+      49/8804 :                         
+      50/8804 :                         	ORG	0x0040		; Skip vector for CALL instruction
+      51/8804 : [22]                    	ENDIF
+      52/8804 :                         
+      53/8804 :                         CSTART:
+      54/8804 : =>FALSE                 	IF ~~FOR_INS8073
+      55/8804 :                         	LD	SP,=STACK
+      56/8804 : [54]                    	ENDIF
+      57/8804 :                         
+ AS V1.42 Beta [Bld 265] - Source File unimon_ins8070.asm - Page 3 - 24/03/24 16:23:50
+
+
+      58/8804 : 20 7D 8F                	JSR	INIT
+      59/8807 :                         
+      60/8807 : 27 C0 7F                	LD	P3,=WORK
+      61/880A : 84 00 78                	LD	EA,=RAM_B
+      62/880D : 8B 10                   	ST	EA,W_DSADDR,P3
+      63/880F : 8B 17                   	ST	EA,W_SADDR,P3
+      64/8811 : 8B 15                   	ST	EA,W_GADDR,P3
+      65/8813 :                         
+      66/8813 : =>TRUE                  	IF USE_REGCMD
+      67/8813 : 8B 24                   	ST	EA,W_REGPC,P3
+      68/8815 : 31                      	LD	EA,SP
+      69/8816 : 8B 26                   	ST	EA,W_REGSP,P3
+      70/8818 : 84 00 00                	LD	EA,=0x0000
+      71/881B : 8B 1F                   	ST	EA,W_REGEA,P3
+      72/881D : 8B 21                   	ST	EA,W_REGT,P3
+      73/881F : 8B 28                   	ST	EA,W_REGP2,P3
+      74/8821 : 8B 2A                   	ST	EA,W_REGP3,P3
+      75/8823 : CB 23                   	ST	A,W_REGS,P3
+      76/8825 : [66]                    	ENDIF			; USE_REGCMD
+      77/8825 :                         
+      78/8825 : C4 49                   	LD	A,='I'
+      79/8827 : CB 19                   	ST	A,W_HEXMOD,P3
+      80/8829 :                         
+      81/8829 :                         	;; Opening message
+      82/8829 : 26 61 8E                	LD	P2,=OPNMSG
+      83/882C : 20 1D 8D                	JSR	STROUT
+      84/882F :                         
+      85/882F :                         WSTART:
+      86/882F : 26 7F 8E                	LD	P2,=PROMPT
+      87/8832 : 20 1D 8D                	JSR	STROUT
+      88/8835 : 20 83 8D                	JSR	GETLIN
+      89/8838 : 26 C0 7F                	LD	P2,=WORK_INBUF
+      90/883B : 20 E0 8D                	JSR	SKIPSP
+      91/883E : 20 E9 8D                	JSR	UPPER
+      92/8841 : 6C EC                   	BZ	WSTART
+      93/8843 : 48                      	LD	E,A		; backup A
+      94/8844 :                         
+      95/8844 : FC 44                   	SUB	A,='D'
+      96/8846 : 7C 03                   	BNZ	M00
+      97/8848 : 24 81 88                	JMP	DUMP
+      98/884B :                         M00:
+      99/884B : 40                      	LD	A,E
+     100/884C : FC 47                   	SUB	A,='G'
+     101/884E : 7C 03                   	BNZ	M01
+     102/8850 : 24 9D 89                	JMP	GO
+     103/8853 :                         M01:
+     104/8853 : 40                      	LD	A,E
+     105/8854 : FC 53                   	SUB	A,='S'
+     106/8856 : 7C 03                   	BNZ	M02
+     107/8858 : 24 D2 89                	JMP	SETM
+     108/885B :                         M02:
+     109/885B : 40                      	LD	A,E
+     110/885C : FC 4C                   	SUB	A,='L'
+     111/885E : 7C 03                   	BNZ	M03
+     112/8860 : 24 4E 8A                	JMP	LOADH
+     113/8863 :                         M03:
+     114/8863 : 40                      	LD	A,E
+     115/8864 : FC 50                   	SUB	A,='P'
+     116/8866 : 7C 03                   	BNZ	M04
+     117/8868 : 24 3C 8B                	JMP	SAVEH
+ AS V1.42 Beta [Bld 265] - Source File unimon_ins8070.asm - Page 4 - 24/03/24 16:23:50
+
+
+     118/886B :                         M04:
+     119/886B : =>TRUE                  	IF USE_REGCMD
+     120/886B : 40                      	LD	A,E
+     121/886C : FC 52                   	SUB	A,='R'
+     122/886E : 7C 03                   	BNZ	M05
+     123/8870 : 24 4B 8C                	JMP	REG
+     124/8873 :                         M05:
+     125/8873 : [119]                   	ENDIF			; USE_REGCMD
+     126/8873 :                         
+     127/8873 : =>TRUE                  	IF FOR_INS8073
+     128/8873 : 40                      	LD	A,E
+     129/8874 : FC 51                   	SUB	A,='Q'
+     130/8876 : 7C 01                   	BNZ	M09
+     131/8878 : 5C                      	RET
+     132/8879 :                         M09:
+     133/8879 : [127]                   	ENDIF
+     134/8879 :                         
+     135/8879 :                         ERR:
+     136/8879 : 26 9C 8E                	LD	P2,=ERRMSG
+     137/887C : 20 1D 8D                	JSR	STROUT
+     138/887F : 24 2E 88                	JMP	WSTART
+     139/8882 :                         
+     140/8882 :                         ;;; Dump memory
+     141/8882 :                         
+     142/8882 :                         DUMP:
+     143/8882 : C6 01                   	LD	A,@1,P2		; INC P2
+     144/8884 : 20 E0 8D                	JSR	SKIPSP
+     145/8887 : 20 FB 8D                	JSR	RDHEX
+     146/888A : C3 1C                   	LD	A,W_CNT,P3
+     147/888C : 7C 10                   	BNZ	DP0
+     148/888E :                         	;; No arg.
+     149/888E : 20 E0 8D                	JSR	SKIPSP
+     150/8891 : C2 00                   	LD	A,0,P2
+     151/8893 : 7C E4                   	BNZ	ERR
+     152/8895 :                         DP00:
+     153/8895 : 83 10                   	LD	EA,W_DSADDR,P3
+     154/8897 : B4 80 00                	ADD	EA,=128
+     155/889A : 8B 12                   	ST	EA,W_DEADDR,P3
+     156/889C : 74 32                   	BRA	DPM
+     157/889E :                         	;; 1st arg. found
+     158/889E :                         DP0:
+     159/889E : 83 1A                   	LD	EA,W_VAL,P3
+     160/88A0 : 8B 10                   	ST	EA,W_DSADDR,P3
+     161/88A2 : 20 E0 8D                	JSR	SKIPSP
+     162/88A5 : C2 00                   	LD	A,0,P2
+     163/88A7 : FC 2C                   	SUB	A,=','
+     164/88A9 : 6C 06                   	BZ	DP1
+     165/88AB : C2 00                   	LD	A,0,P2
+     166/88AD : 6C E6                   	BZ	DP00		; No 2nd arg.
+     167/88AF : 74 C8                   	BRA	ERR
+     168/88B1 :                         	;;
+     169/88B1 :                         DP1:
+     170/88B1 : C6 01                   	LD	A,@1,P2
+     171/88B3 : 20 E0 8D                	JSR	SKIPSP
+     172/88B6 : 20 FB 8D                	JSR	RDHEX
+     173/88B9 : 20 E0 8D                	JSR	SKIPSP
+     174/88BC : C3 1C                   	LD	A,W_CNT,P3
+     175/88BE : 6C 0D                   	BZ	DP1E
+     176/88C0 : C2 00                   	LD	A,0,P2
+     177/88C2 : 7C 09                   	BNZ	DP1E
+ AS V1.42 Beta [Bld 265] - Source File unimon_ins8070.asm - Page 5 - 24/03/24 16:23:50
+
+
+     178/88C4 : 83 1A                   	LD	EA,W_VAL,P3
+     179/88C6 : B4 01 00                	ADD	EA,=1
+     180/88C9 : 8B 12                   	ST	EA,W_DEADDR,P3
+     181/88CB : 74 03                   	BRA	DPM
+     182/88CD :                         DP1E:
+     183/88CD : 24 78 88                	JMP	ERR
+     184/88D0 :                         DPM:
+     185/88D0 : 83 10                   	LD	EA,W_DSADDR,P3
+     186/88D2 : D4 F0                   	AND	A,=0xF0
+     187/88D4 : 46                      	LD	P2,EA
+     188/88D5 : C4 00                   	LD	A,=0
+     189/88D7 : CB 14                   	ST	A,W_DSTATE,P3
+     190/88D9 :                         DPM0:
+     191/88D9 : 20 FA 88                	JSR	DPL
+     192/88DC : 20 8A 8F                	JSR	CONST
+     193/88DF : FC 01                   	SUB	A,=1
+     194/88E1 : 6C 0F                   	BZ	DPM1
+     195/88E3 : C3 14                   	LD	A,W_DSTATE,P3
+     196/88E5 : FC 02                   	SUB	A,=2
+     197/88E7 : 64 02                   	BP	DPM01
+     198/88E9 : 74 EE                   	BRA	DPM0
+     199/88EB :                         DPM01:
+     200/88EB :                         	;; Finish
+     201/88EB : 83 12                   	LD	EA,W_DEADDR,P3
+     202/88ED : 8B 10                   	ST	EA,W_DSADDR,P3
+     203/88EF : 24 2E 88                	JMP	WSTART
+     204/88F2 :                         DPM1:
+     205/88F2 :                         	;; Abort
+     206/88F2 : 32                      	LD	EA,P2
+     207/88F3 : 8B 10                   	ST	EA,W_DSADDR,P3
+     208/88F5 : 20 7E 8F                	JSR	CONIN
+     209/88F8 : 24 2E 88                	JMP	WSTART
+     210/88FB :                         
+     211/88FB :                         	;; Dump line
+     212/88FB :                         DPL:
+     213/88FB : 32                      	LD	EA,P2
+     214/88FC : 0A                      	PUSH	A
+     215/88FD : 40                      	LD	A,E
+     216/88FE : 20 27 8D                	JSR	HEXOUT2
+     217/8901 : 38                      	POP	A
+     218/8902 : 20 27 8D                	JSR	HEXOUT2
+     219/8905 : 22 A4 8E                	PLI	P2,=DSEP0
+     220/8908 : 20 1D 8D                	JSR	STROUT
+     221/890B : 5E                      	POP	P2
+     222/890C :                         
+     223/890C : 84 C0 7F                	LD	EA,=WORK_INBUF
+     224/890F : 8B 1A                   	ST	EA,W_VAL,P3
+     225/8911 : C4 10                   	LD	A,=16
+     226/8913 : CB 1C                   	ST	A,W_CNT,P3
+     227/8915 :                         DPL0:
+     228/8915 : 20 46 89                	JSR	DPB
+     229/8918 : 9B 1C                   	DLD	A,W_CNT,P3
+     230/891A : 7C F9                   	BNZ	DPL0
+     231/891C :                         
+     232/891C : 22 A7 8E                	PLI	P2,=DSEP1
+     233/891F : 20 1D 8D                	JSR	STROUT
+     234/8922 : 5E                      	POP	P2
+     235/8923 :                         
+     236/8923 :                         	;; Print ASCII area
+     237/8923 : 22 C0 7F                	PLI	P2,=WORK_INBUF
+ AS V1.42 Beta [Bld 265] - Source File unimon_ins8070.asm - Page 6 - 24/03/24 16:23:50
+
+
+     238/8926 : C4 10                   	LD	A,=16
+     239/8928 : CB 1C                   	ST	A,W_CNT,P3
+     240/892A :                         DPL1:
+     241/892A : C6 01                   	LD	A,@1,P2
+     242/892C : FC 20                   	SUB	A,=' '
+     243/892E : 64 04                   	BP	DPL3
+     244/8930 :                         DPL2:
+     245/8930 :                         	;; Unprintable
+     246/8930 : C4 2E                   	LD	A,='.'
+     247/8932 : 74 08                   	BRA	DPL4
+     248/8934 :                         DPL3:
+     249/8934 : C2 FF                   	LD	A,-1,P2
+     250/8936 : FC 7F                   	SUB	A,=0x7F
+     251/8938 : 64 F6                   	BP	DPL2
+     252/893A : C2 FF                   	LD	A,-1,P2
+     253/893C :                         DPL4:
+     254/893C : 20 8D 8F                	JSR	CONOUT
+     255/893F : 9B 1C                   	DLD	A,W_CNT,P3
+     256/8941 : 7C E7                   	BNZ	DPL1
+     257/8943 :                         
+     258/8943 : 5E                      	POP	P2
+     259/8944 : 24 79 8D                	JMP	CRLF
+     260/8947 :                         
+     261/8947 :                         	;; Dump byte
+     262/8947 :                         DPB:
+     263/8947 : C4 20                   	LD	A,=' '
+     264/8949 : 20 8D 8F                	JSR	CONOUT
+     265/894C : C3 14                   	LD	A,W_DSTATE,P3
+     266/894E : 7C 28                   	BNZ	DPB2
+     267/8950 :                         	;; Dump state 0
+     268/8950 : 32                      	LD	EA,P2
+     269/8951 : BB 10                   	SUB	EA,W_DSADDR,P3
+     270/8953 : 7C 03                   	BNZ	DPB0
+     271/8955 : 40                      	LD	A,E
+     272/8956 : 6C 1C                   	BZ	DPB1
+     273/8958 :                         	;; Still 0 or 2
+     274/8958 :                         DPB0:
+     275/8958 : C4 20                   	LD	A,=' '
+     276/895A : 20 8D 8F                	JSR	CONOUT
+     277/895D : C4 20                   	LD	A,=' '
+     278/895F : 20 8D 8F                	JSR	CONOUT
+     279/8962 :                         
+     280/8962 : 56                      	PUSH	P2
+     281/8963 : 83 1A                   	LD	EA,W_VAL,P3
+     282/8965 : 46                      	LD	P2,EA
+     283/8966 : C4 20                   	LD	A,=' '
+     284/8968 : CE 01                   	ST	A,@1,P2
+     285/896A : 32                      	LD	EA,P2
+     286/896B : 8B 1A                   	ST	EA,W_VAL,P3
+     287/896D : 5E                      	POP	P2
+     288/896E :                         
+     289/896E : 32                      	LD	EA,P2
+     290/896F : B4 01 00                	ADD	EA,=1
+     291/8972 : 46                      	LD	P2,EA
+     292/8973 : 5C                      	RET
+     293/8974 :                         
+     294/8974 :                         	;; Found start address
+     295/8974 :                         DPB1:
+     296/8974 : C4 01                   	LD	A,=1
+     297/8976 : CB 14                   	ST	A,W_DSTATE,P3
+ AS V1.42 Beta [Bld 265] - Source File unimon_ins8070.asm - Page 7 - 24/03/24 16:23:50
+
+
+     298/8978 :                         DPB2:
+     299/8978 : C3 14                   	LD	A,W_DSTATE,P3
+     300/897A : FC 01                   	SUB	A,=1
+     301/897C : 7C DA                   	BNZ	DPB0
+     302/897E :                         	;; Dump state 1
+     303/897E : C6 01                   	LD	A,@1,P2
+     304/8980 : 56                      	PUSH	P2
+     305/8981 : 0A                      	PUSH	A
+     306/8982 : 83 1A                   	LD	EA,W_VAL,P3
+     307/8984 : 46                      	LD	P2,EA
+     308/8985 : C1 00                   	LD	A,0,SP
+     309/8987 : CE 01                   	ST	A,@1,P2
+     310/8989 : 32                      	LD	EA,P2
+     311/898A : 8B 1A                   	ST	EA,W_VAL,P3
+     312/898C : 38                      	POP	A
+     313/898D : 5E                      	POP	P2
+     314/898E : 20 27 8D                	JSR	HEXOUT2
+     315/8991 :                         
+     316/8991 : 32                      	LD	EA,P2
+     317/8992 : BB 12                   	SUB	EA,W_DEADDR,P3
+     318/8994 : 7C 07                   	BNZ	DPBE
+     319/8996 : 40                      	LD	A,E
+     320/8997 : 7C 04                   	BNZ	DPBE
+     321/8999 :                         	;; Found end address
+     322/8999 : C4 02                   	LD	A,=2
+     323/899B : CB 14                   	ST	A,W_DSTATE,P3
+     324/899D :                         DPBE:
+     325/899D : 5C                      	RET
+     326/899E :                         
+     327/899E :                         ;;; GO address
+     328/899E :                         
+     329/899E :                         GO:
+     330/899E : C6 01                   	LD	A,@1,P2		; INC P2
+     331/89A0 : 20 E0 8D                	JSR	SKIPSP
+     332/89A3 : 20 FB 8D                	JSR	RDHEX
+     333/89A6 : 20 E0 8D                	JSR	SKIPSP
+     334/89A9 : C2 00                   	LD	A,0,P2
+     335/89AB : 6C 03                   	BZ	GO0
+     336/89AD : 24 78 88                	JMP	ERR
+     337/89B0 :                         GO0:
+     338/89B0 : C3 1C                   	LD	A,W_CNT,P3
+     339/89B2 : 6C 04                   	BZ	G0
+     340/89B4 : 83 1A                   	LD	EA,W_VAL,P3
+     341/89B6 :                         
+     342/89B6 : =>TRUE                  	IF USE_REGCMD
+     343/89B6 :                         
+     344/89B6 : 8B 24                   	ST	EA,W_REGPC,P3
+     345/89B8 :                         G0:
+     346/89B8 : 83 26                   	LD	EA,W_REGSP,P3
+     347/89BA : 45                      	LD	SP,EA
+     348/89BB : 83 24                   	LD	EA,W_REGPC,P3
+     349/89BD : BC 01 00                	SUB	EA,=1
+     350/89C0 : 08                      	PUSH	EA
+     351/89C1 : 83 1F                   	LD	EA,W_REGEA,P3
+     352/89C3 : 08                      	PUSH	EA
+     353/89C4 : 83 2A                   	LD	EA,W_REGP3,P3
+     354/89C6 : 08                      	PUSH	EA
+     355/89C7 : 83 28                   	LD	EA,W_REGP2,P3
+     356/89C9 : 46                      	LD	P2,EA
+     357/89CA : 83 21                   	LD	EA,W_REGT,P3
+ AS V1.42 Beta [Bld 265] - Source File unimon_ins8070.asm - Page 8 - 24/03/24 16:23:50
+
+
+     358/89CC : 09                      	LD	T,EA
+     359/89CD : C3 23                   	LD	A,W_REGS,P3
+     360/89CF : 07                      	LD	S,A
+     361/89D0 : 5F                      	POP	P3
+     362/89D1 : 3A                      	POP	EA
+     363/89D2 : 5C                      	RET
+     364/89D3 :                         
+     365/89D3 : =>FALSE                 	ELSE			; USE_REGCMD
+     366/89D3 :                         	
+     367/89D3 :                         	ST	EA,W_GADDR,P3
+     368/89D3 :                         G0:
+     369/89D3 :                         	LD	EA,W_GADDR,P3
+     370/89D3 :                         	SUB	EA,=1
+     371/89D3 :                         	LD	PC,EA
+     372/89D3 :                         
+     373/89D3 : [342]                   	ENDIF			; USE_REGCMD
+     374/89D3 :                         
+     375/89D3 :                         ;;; Set memory
+     376/89D3 :                         
+     377/89D3 :                         SETM:
+     378/89D3 : C6 01                   	LD	A,@1,P2		; INC P2
+     379/89D5 : 20 E0 8D                	JSR	SKIPSP
+     380/89D8 : 20 FB 8D                	JSR	RDHEX
+     381/89DB : 20 E0 8D                	JSR	SKIPSP
+     382/89DE : C2 00                   	LD	A,0,P2
+     383/89E0 : 6C 03                   	BZ	SM0
+     384/89E2 : 24 78 88                	JMP	ERR
+     385/89E5 :                         SM0:
+     386/89E5 : C3 1C                   	LD	A,W_CNT,P3
+     387/89E7 : 6C 04                   	BZ	SM1
+     388/89E9 : 83 1A                   	LD	EA,W_VAL,P3
+     389/89EB : 8B 17                   	ST	EA,W_SADDR,P3
+     390/89ED :                         SM1:
+     391/89ED : C3 18                   	LD	A,W_SADDR+1,P3
+     392/89EF : 20 27 8D                	JSR	HEXOUT2
+     393/89F2 : C3 17                   	LD	A,W_SADDR,P3
+     394/89F4 : 20 27 8D                	JSR	HEXOUT2
+     395/89F7 :                         
+     396/89F7 : 26 A7 8E                	LD	P2,=DSEP1
+     397/89FA : 20 1D 8D                	JSR	STROUT
+     398/89FD :                         
+     399/89FD : 83 17                   	LD	EA,W_SADDR,P3
+     400/89FF : 46                      	LD	P2,EA
+     401/8A00 : C2 00                   	LD	A,0,P2
+     402/8A02 : 20 27 8D                	JSR	HEXOUT2
+     403/8A05 : C4 20                   	LD	A,=' '
+     404/8A07 : 20 8D 8F                	JSR	CONOUT
+     405/8A0A :                         
+     406/8A0A : 20 83 8D                	JSR	GETLIN
+     407/8A0D : 26 C0 7F                	LD	P2,=WORK_INBUF
+     408/8A10 : 20 E0 8D                	JSR	SKIPSP
+     409/8A13 : C2 00                   	LD	A,0,P2
+     410/8A15 : 48                      	LD	E,A
+     411/8A16 : 7C 09                   	BNZ	SM2
+     412/8A18 :                         	;; Empty (Increment address)
+     413/8A18 : 83 17                   	LD	EA,W_SADDR,P3
+     414/8A1A : B4 01 00                	ADD	EA,=1
+     415/8A1D : 8B 17                   	ST	EA,W_SADDR,P3
+     416/8A1F : 74 CC                   	BRA	SM1
+     417/8A21 :                         SM2:
+ AS V1.42 Beta [Bld 265] - Source File unimon_ins8070.asm - Page 9 - 24/03/24 16:23:50
+
+
+     418/8A21 : 40                      	LD	A,E
+     419/8A22 : FC 2D                   	SUB	A,='-'
+     420/8A24 : 7C 09                   	BNZ	SM3
+     421/8A26 :                         	;; '-' (Decrement address)
+     422/8A26 : 83 17                   	LD	EA,W_SADDR,P3
+     423/8A28 : BC 01 00                	SUB	EA,=1
+     424/8A2B : 8B 17                   	ST	EA,W_SADDR,P3
+     425/8A2D : 74 BE                   	BRA	SM1
+     426/8A2F :                         SM3:
+     427/8A2F : 40                      	LD	A,E
+     428/8A30 : FC 2E                   	SUB	A,='.'
+     429/8A32 : 7C 03                   	BNZ	SM4
+     430/8A34 :                         	;; '.' (Quit)
+     431/8A34 : 24 2E 88                	JMP	WSTART
+     432/8A37 :                         SM4:
+     433/8A37 : 20 FB 8D                	JSR	RDHEX
+     434/8A3A : C3 1C                   	LD	A,W_CNT,P3
+     435/8A3C : 7C 03                   	BNZ	SM5
+     436/8A3E : 24 78 88                	JMP	ERR
+     437/8A41 :                         SM5:
+     438/8A41 : 83 17                   	LD	EA,W_SADDR,P3
+     439/8A43 : 46                      	LD	P2,EA
+     440/8A44 : B4 01 00                	ADD	EA,=1
+     441/8A47 : 8B 17                   	ST	EA,W_SADDR,P3
+     442/8A49 : C3 1A                   	LD	A,W_VAL,P3	; Low byte
+     443/8A4B : CA 00                   	ST	A,0,P2
+     444/8A4D : 74 9E                   	BRA	SM1
+     445/8A4F :                         
+     446/8A4F :                         ;;; LOAD HEX file
+     447/8A4F :                         
+     448/8A4F :                         LOADH:
+     449/8A4F : C6 01                   	LD	A,@1,P2
+     450/8A51 : 20 E0 8D                	JSR	SKIPSP
+     451/8A54 : 20 FB 8D                	JSR	RDHEX
+     452/8A57 : 20 E0 8D                	JSR	SKIPSP
+     453/8A5A : C2 00                   	LD	A,0,P2
+     454/8A5C : 7C 20                   	BNZ	LHE
+     455/8A5E :                         
+     456/8A5E : 20 7E 8F                LH0:	JSR	CONIN
+     457/8A61 : 20 E9 8D                	JSR	UPPER
+     458/8A64 : 48                      	LD	E,A
+     459/8A65 : FC 53                   	SUB	A,='S'
+     460/8A67 : 6C 70                   	BZ	LHS0
+     461/8A69 :                         LH1:
+     462/8A69 : 40                      	LD	A,E
+     463/8A6A : FC 3A                   	SUB	A,=':'
+     464/8A6C : 6C 13                   	BZ	LHI0
+     465/8A6E :                         LH2:
+     466/8A6E :                         	;; Skip to EOL
+     467/8A6E : 40                      	LD	A,E
+     468/8A6F : FC 0D                   	SUB	A,=CR
+     469/8A71 : 6C EB                   	BZ	LH0
+     470/8A73 : 40                      	LD	A,E
+     471/8A74 : FC 0A                   	SUB	A,=LF
+     472/8A76 : 6C E6                   	BZ	LH0
+     473/8A78 :                         LH3:
+     474/8A78 : 20 7E 8F                	JSR	CONIN
+     475/8A7B : 48                      	LD	E,A
+     476/8A7C : 74 F0                   	BRA	LH2
+     477/8A7E :                         LHE:
+ AS V1.42 Beta [Bld 265] - Source File unimon_ins8070.asm - Page 10 - 24/03/24 16:23:50
+
+
+     478/8A7E : 24 78 88                	JMP	ERR
+     479/8A81 :                         
+     480/8A81 :                         LHI0:
+     481/8A81 : 20 45 8D                	JSR	HEXIN
+     482/8A84 : CB 1D                   	ST	A,W_SUM,P3
+     483/8A86 : CB 1C                   	ST	A,W_CNT,P3
+     484/8A88 :                         
+     485/8A88 : 20 45 8D                	JSR	HEXIN
+     486/8A8B : 48                      	LD	E,A		; Address H
+     487/8A8C : F3 1D                   	ADD	A,W_SUM,P3
+     488/8A8E : CB 1D                   	ST	A,W_SUM,P3
+     489/8A90 :                         
+     490/8A90 : 20 45 8D                	JSR	HEXIN
+     491/8A93 : 0A                      	PUSH	A
+     492/8A94 : F3 1D                   	ADD	A,W_SUM,P3
+     493/8A96 : CB 1D                   	ST	A,W_SUM,P3
+     494/8A98 : 38                      	POP	A		; Address L
+     495/8A99 :                         
+     496/8A99 :                         	;; Add offset
+     497/8A99 : B3 1A                   	ADD	EA,W_VAL,P3
+     498/8A9B : 46                      	LD	P2,EA
+     499/8A9C :                         
+     500/8A9C : 20 45 8D                	JSR	HEXIN
+     501/8A9F : CB 1E                   	ST	A,W_RECTYP,P3
+     502/8AA1 : F3 1D                   	ADD	A,W_SUM,P3
+     503/8AA3 : CB 1D                   	ST	A,W_SUM,P3
+     504/8AA5 : C3 1E                   	LD	A,W_RECTYP,P3
+     505/8AA7 : FC 02                   	SUB	A,=2
+     506/8AA9 : 64 CD                   	BP	LH3		; Skip unsupported record type
+     507/8AAB :                         
+     508/8AAB : C3 1C                   	LD	A,W_CNT,P3
+     509/8AAD : 6C 13                   	BZ	LHI3
+     510/8AAF :                         LHI1:
+     511/8AAF : 20 45 8D                	JSR	HEXIN
+     512/8AB2 : 48                      	LD	E,A
+     513/8AB3 : F3 1D                   	ADD	A,W_SUM,P3
+     514/8AB5 : CB 1D                   	ST	A,W_SUM,P3
+     515/8AB7 :                         
+     516/8AB7 : C3 1E                   	LD	A,W_RECTYP,P3
+     517/8AB9 : 7C 03                   	BNZ	LHI2
+     518/8ABB :                         
+     519/8ABB : 40                      	LD	A,E
+     520/8ABC : CE 01                   	ST	A,@1,P2
+     521/8ABE :                         LHI2:
+     522/8ABE : 9B 1C                   	DLD	A,W_CNT,P3
+     523/8AC0 : 7C ED                   	BNZ	LHI1
+     524/8AC2 :                         LHI3:
+     525/8AC2 : 20 45 8D                	JSR	HEXIN
+     526/8AC5 : F3 1D                   	ADD	A,W_SUM,P3
+     527/8AC7 : 7C 07                   	BNZ	LHIE		; Checksum error
+     528/8AC9 : C3 1E                   	LD	A,W_RECTYP,P3
+     529/8ACB : 6C AB                   	BZ	LH3
+     530/8ACD : 24 2E 88                	JMP	WSTART
+     531/8AD0 :                         LHIE:
+     532/8AD0 : 26 82 8E                	LD	P2,=IHEMSG
+     533/8AD3 : 20 1D 8D                	JSR	STROUT
+     534/8AD6 : 24 2E 88                	JMP	WSTART
+     535/8AD9 :                         
+     536/8AD9 :                         LHS0:
+     537/8AD9 : C4 00                   	LD	A,=0
+ AS V1.42 Beta [Bld 265] - Source File unimon_ins8070.asm - Page 11 - 24/03/24 16:23:50
+
+
+     538/8ADB : CB 1E                   	ST	A,W_RECTYP,P3
+     539/8ADD : 20 7E 8F                	JSR	CONIN
+     540/8AE0 : 48                      	LD	E,A
+     541/8AE1 : FC 31                   	SUB	A,='1'
+     542/8AE3 : 6C 0B                   	BZ	LHS02
+     543/8AE5 : 40                      	LD	A,E
+     544/8AE6 : FC 39                   	SUB	A,='9'
+     545/8AE8 : 6C 02                   	BZ	LHS01
+     546/8AEA : 74 8C                   	BRA	LH3		; Unsupported record type
+     547/8AEC :                         LHS01:
+     548/8AEC : C4 01                   	LD	A,=1
+     549/8AEE : CB 1E                   	ST	A,W_RECTYP,P3
+     550/8AF0 :                         LHS02:
+     551/8AF0 :                         
+     552/8AF0 : 20 45 8D                	JSR	HEXIN
+     553/8AF3 : CB 1D                   	ST	A,W_SUM,P3
+     554/8AF5 : FC 03                   	SUB	A,=3
+     555/8AF7 : CB 1C                   	ST	A,W_CNT,P3
+     556/8AF9 :                         
+     557/8AF9 : 20 45 8D                	JSR	HEXIN
+     558/8AFC : 48                      	LD	E,A		; Address H
+     559/8AFD : F3 1D                   	ADD	A,W_SUM,P3
+     560/8AFF : CB 1D                   	ST	A,W_SUM,P3
+     561/8B01 :                         
+     562/8B01 : 20 45 8D                	JSR	HEXIN
+     563/8B04 : 0A                      	PUSH	A
+     564/8B05 : F3 1D                   	ADD	A,W_SUM,P3
+     565/8B07 : CB 1D                   	ST	A,W_SUM,P3
+     566/8B09 : 38                      	POP	A		; Address L
+     567/8B0A :                         
+     568/8B0A :                         	;; Add offset
+     569/8B0A : B3 1A                   	ADD	EA,W_VAL,P3
+     570/8B0C : 46                      	LD	P2,EA
+     571/8B0D :                         
+     572/8B0D : C3 1C                   	LD	A,W_CNT,P3
+     573/8B0F : 6C 13                   	BZ	LHS3
+     574/8B11 :                         LHS1:
+     575/8B11 : 20 45 8D                	JSR	HEXIN
+     576/8B14 : 48                      	LD	E,A
+     577/8B15 : F3 1D                   	ADD	A,W_SUM,P3
+     578/8B17 : CB 1D                   	ST	A,W_SUM,P3
+     579/8B19 :                         
+     580/8B19 : C3 1E                   	LD	A,W_RECTYP,P3
+     581/8B1B : 7C 03                   	BNZ	LHS2
+     582/8B1D :                         
+     583/8B1D : 40                      	LD	A,E
+     584/8B1E : CE 01                   	ST	A,@1,P2
+     585/8B20 :                         LHS2:
+     586/8B20 : 9B 1C                   	DLD	A,W_CNT,P3
+     587/8B22 : 7C ED                   	BNZ	LHS1
+     588/8B24 :                         LHS3:
+     589/8B24 :                         
+     590/8B24 : 20 45 8D                	JSR	HEXIN
+     591/8B27 : F3 1D                   	ADD	A,W_SUM,P3
+     592/8B29 : FC FF                   	SUB	A,=0xFF
+     593/8B2B : 7C 07                   	BNZ	LHSE		; Checksum error
+     594/8B2D :                         
+     595/8B2D : C3 1E                   	LD	A,W_RECTYP,P3
+     596/8B2F : 7C 09                   	BNZ	LHSR
+     597/8B31 : 24 77 8A                	JMP	LH3
+ AS V1.42 Beta [Bld 265] - Source File unimon_ins8070.asm - Page 12 - 24/03/24 16:23:50
+
+
+     598/8B34 :                         LHSE:
+     599/8B34 : 26 8F 8E                	LD	P2,=SHEMSG
+     600/8B37 : 20 1D 8D                	JSR	STROUT
+     601/8B3A :                         LHSR:
+     602/8B3A : 24 2E 88                	JMP	WSTART
+     603/8B3D :                         
+     604/8B3D :                         ;;; SAVE HEX file
+     605/8B3D :                         
+     606/8B3D :                         SAVEH:
+     607/8B3D : C6 01                   	LD	A,@1,P2
+     608/8B3F : C2 00                   	LD	A,0,P2
+     609/8B41 : 20 E9 8D                	JSR	UPPER
+     610/8B44 : 48                      	LD	E,A
+     611/8B45 : FC 49                   	SUB	A,='I'
+     612/8B47 : 6C 05                   	BZ	SH0
+     613/8B49 : 40                      	LD	A,E
+     614/8B4A : FC 53                   	SUB	A,='S'
+     615/8B4C : 7C 05                   	BNZ	SH1
+     616/8B4E :                         SH0:
+     617/8B4E : C6 01                   	LD	A,@1,P2
+     618/8B50 : 40                      	LD	A,E
+     619/8B51 : CB 19                   	ST	A,W_HEXMOD,P3
+     620/8B53 :                         SH1:
+     621/8B53 : 20 E0 8D                	JSR	SKIPSP
+     622/8B56 : 20 FB 8D                	JSR	RDHEX
+     623/8B59 : C3 1C                   	LD	A,W_CNT,P3
+     624/8B5B : 6C 20                   	BZ	SHE		; Start address missing
+     625/8B5D : 83 1A                   	LD	EA,W_VAL,P3
+     626/8B5F : 08                      	PUSH	EA		; Start address
+     627/8B60 : 20 E0 8D                	JSR	SKIPSP
+     628/8B63 : C6 01                   	LD	A,@1,P2
+     629/8B65 : FC 2C                   	SUB	A,=','
+     630/8B67 : 7C 13                   	BNZ	SHEP
+     631/8B69 : 20 E0 8D                	JSR	SKIPSP
+     632/8B6C : 20 FB 8D                	JSR	RDHEX
+     633/8B6F : C3 1C                   	LD	A,W_CNT,P3
+     634/8B71 : 6C 09                   	BZ	SHEP		; End address missing
+     635/8B73 : A3 1A                   	LD	T,W_VAL,P3	; T = End address
+     636/8B75 : 20 E0 8D                	JSR	SKIPSP
+     637/8B78 : C2 00                   	LD	A,0,P2
+     638/8B7A : 6C 04                   	BZ	SH2
+     639/8B7C :                         SHEP:
+     640/8B7C : 3A                      	POP	EA		; Drop start address on stack
+     641/8B7D :                         SHE:
+     642/8B7D : 24 78 88                	JMP	ERR
+     643/8B80 :                         
+     644/8B80 :                         SH2:
+     645/8B80 : 3A                      	POP	EA		; Start address
+     646/8B81 : 46                      	LD	P2,EA
+     647/8B82 : 8B 1A                   	ST	EA,W_VAL,P3
+     648/8B84 : 0B                      	LD	EA,T
+     649/8B85 : BB 1A                   	SUB	EA,W_VAL,P3	; <end> - <start>
+     650/8B87 : B4 01 00                	ADD	EA,=1
+     651/8B8A : 09                      	LD	T,EA		; T = Length
+     652/8B8B :                         SH3:	
+     653/8B8B : 20 A9 8B                	JSR	SHL
+     654/8B8E : 0B                      	LD	EA,T
+     655/8B8F : 58                      	OR	A,E
+     656/8B90 : 7C F9                   	BNZ	SH3
+     657/8B92 :                         
+ AS V1.42 Beta [Bld 265] - Source File unimon_ins8070.asm - Page 13 - 24/03/24 16:23:50
+
+
+     658/8B92 : C3 19                   	LD	A,W_HEXMOD,P3
+     659/8B94 : FC 49                   	SUB	A,='I'
+     660/8B96 : 7C 09                   	BNZ	SH4
+     661/8B98 :                         	;; End record for Intel HEX
+     662/8B98 : 26 AB 8E                	LD	P2,=IHEXER
+     663/8B9B : 20 1D 8D                	JSR	STROUT
+     664/8B9E : 24 2E 88                	JMP	WSTART
+     665/8BA1 :                         SH4:
+     666/8BA1 :                         	;; End record for Motorola S record
+     667/8BA1 : 26 B9 8E                	LD	P2,=SRECER
+     668/8BA4 : 20 1D 8D                	JSR	STROUT
+     669/8BA7 : 24 2E 88                	JMP	WSTART
+     670/8BAA :                         
+     671/8BAA :                         SHL:
+     672/8BAA : C4 10                   	LD	A,=16
+     673/8BAC : CB 1C                   	ST	A,W_CNT,P3
+     674/8BAE : 0B                      	LD	EA,T
+     675/8BAF : D4 F0                   	AND	A,=0xF0
+     676/8BB1 : 7C 0C                   	BNZ	SHL0		; T >= 16
+     677/8BB3 : 40                      	LD	A,E
+     678/8BB4 : 7C 09                   	BNZ	SHL0		; T >= 16
+     679/8BB6 : 0B                      	LD	EA,T
+     680/8BB7 : CB 1C                   	ST	A,W_CNT,P3
+     681/8BB9 : 84 00 00                	LD	EA,=0
+     682/8BBC : 09                      	LD	T,EA
+     683/8BBD : 74 09                   	BRA	SHL1
+     684/8BBF :                         SHL0:
+     685/8BBF : 84 10 00                	LD	EA,=16
+     686/8BC2 : 8B 1A                   	ST	EA,W_VAL,P3
+     687/8BC4 : 0B                      	LD	EA,T
+     688/8BC5 : BB 1A                   	SUB	EA,W_VAL,P3
+     689/8BC7 : 09                      	LD	T,EA		; T = T - 16
+     690/8BC8 :                         SHL1:
+     691/8BC8 : C3 19                   	LD	A,W_HEXMOD,P3
+     692/8BCA : FC 49                   	SUB	A,='I'
+     693/8BCC : 7C 3E                   	BNZ	SHLS
+     694/8BCE :                         
+     695/8BCE :                         	;; Intel HEX
+     696/8BCE : C4 3A                   	LD	A,=':'
+     697/8BD0 : 20 8D 8F                	JSR	CONOUT
+     698/8BD3 :                         
+     699/8BD3 : C3 1C                   	LD	A,W_CNT,P3
+     700/8BD5 : CB 1D                   	ST	A,W_SUM,P3	; Checksum
+     701/8BD7 : 20 27 8D                	JSR	HEXOUT2		; Length
+     702/8BDA :                         
+     703/8BDA : 32                      	LD	EA,P2
+     704/8BDB : 40                      	LD	A,E
+     705/8BDC : F3 1D                   	ADD	A,W_SUM,P3
+     706/8BDE : CB 1D                   	ST	A,W_SUM,P3	; Checksum
+     707/8BE0 : 40                      	LD	A,E
+     708/8BE1 : 20 27 8D                	JSR	HEXOUT2		; Address H
+     709/8BE4 :                         
+     710/8BE4 : 32                      	LD	EA,P2
+     711/8BE5 : 48                      	LD	E,A
+     712/8BE6 : F3 1D                   	ADD	A,W_SUM,P3
+     713/8BE8 : CB 1D                   	ST	A,W_SUM,P3
+     714/8BEA : 40                      	LD	A,E
+     715/8BEB : 20 27 8D                	JSR	HEXOUT2		; Address L
+     716/8BEE :                         
+     717/8BEE : C4 00                   	LD	A,=0
+ AS V1.42 Beta [Bld 265] - Source File unimon_ins8070.asm - Page 14 - 24/03/24 16:23:50
+
+
+     718/8BF0 : 20 27 8D                	JSR	HEXOUT2		; Record type
+     719/8BF3 :                         SHLI0:
+     720/8BF3 : C6 01                   	LD	A,@1,P2
+     721/8BF5 : 48                      	LD	E,A
+     722/8BF6 : F3 1D                   	ADD	A,W_SUM,P3
+     723/8BF8 : CB 1D                   	ST	A,W_SUM,P3
+     724/8BFA : 40                      	LD	A,E
+     725/8BFB : 20 27 8D                	JSR	HEXOUT2
+     726/8BFE :                         
+     727/8BFE : 9B 1C                   	DLD	A,W_CNT,P3
+     728/8C00 : 7C F1                   	BNZ	SHLI0
+     729/8C02 :                         
+     730/8C02 : C4 00                   	LD	A,=0
+     731/8C04 : FB 1D                   	SUB	A,W_SUM,P3
+     732/8C06 : 20 27 8D                	JSR	HEXOUT2
+     733/8C09 : 24 79 8D                	JMP	CRLF
+     734/8C0C :                         
+     735/8C0C :                         SHLS:
+     736/8C0C :                         	;; Motorola S record
+     737/8C0C : C4 53                   	LD	A,='S'
+     738/8C0E : 20 8D 8F                	JSR	CONOUT
+     739/8C11 : C4 31                   	LD	A,='1'
+     740/8C13 : 20 8D 8F                	JSR	CONOUT
+     741/8C16 :                         
+     742/8C16 : C3 1C                   	LD	A,W_CNT,P3
+     743/8C18 : F4 03                   	ADD	A,=3		; DataLength + 2 (addr) + 1 (sum)
+     744/8C1A : CB 1D                   	ST	A,W_SUM,P3
+     745/8C1C : 20 27 8D                	JSR	HEXOUT2
+     746/8C1F :                         
+     747/8C1F : 32                      	LD	EA,P2
+     748/8C20 : 40                      	LD	A,E
+     749/8C21 : F3 1D                   	ADD	A,W_SUM,P3
+     750/8C23 : CB 1D                   	ST	A,W_SUM,P3
+     751/8C25 : 40                      	LD	A,E
+     752/8C26 : 20 27 8D                	JSR	HEXOUT2		; Address H
+     753/8C29 :                         
+     754/8C29 : 32                      	LD	EA,P2
+     755/8C2A : 48                      	LD	E,A
+     756/8C2B : F3 1D                   	ADD	A,W_SUM,P3
+     757/8C2D : CB 1D                   	ST	A,W_SUM,P3
+     758/8C2F : 40                      	LD	A,E
+     759/8C30 : 20 27 8D                	JSR	HEXOUT2		; Address L
+     760/8C33 :                         
+     761/8C33 :                         SHLS0:
+     762/8C33 : C6 01                   	LD	A,@1,P2
+     763/8C35 : 48                      	LD	E,A
+     764/8C36 : F3 1D                   	ADD	A,W_SUM,P3
+     765/8C38 : CB 1D                   	ST	A,W_SUM,P3
+     766/8C3A : 40                      	LD	A,E
+     767/8C3B : 20 27 8D                	JSR	HEXOUT2
+     768/8C3E :                         
+     769/8C3E : 9B 1C                   	DLD	A,W_CNT,P3
+     770/8C40 : 7C F1                   	BNZ	SHLS0
+     771/8C42 :                         
+     772/8C42 : C3 1D                   	LD	A,W_SUM,P3
+     773/8C44 : E4 FF                   	XOR	A,=0xFF
+     774/8C46 : 20 27 8D                	JSR	HEXOUT2
+     775/8C49 : 24 79 8D                	JMP	CRLF
+     776/8C4C :                         
+     777/8C4C :                         ;;; Register
+ AS V1.42 Beta [Bld 265] - Source File unimon_ins8070.asm - Page 15 - 24/03/24 16:23:50
+
+
+     778/8C4C :                         
+     779/8C4C : =>TRUE                  	IF USE_REGCMD
+     780/8C4C :                         
+     781/8C4C :                         REG:
+     782/8C4C : C6 01                   	LD	A,@1,P2
+     783/8C4E : 20 E0 8D                	JSR	SKIPSP
+     784/8C51 : 20 E9 8D                	JSR	UPPER
+     785/8C54 : 7C 06                   	BNZ	RG0
+     786/8C56 : 20 E6 8C                	JSR	RDUMP
+     787/8C59 : 24 2E 88                	JMP	WSTART
+     788/8C5C :                         RG0:
+     789/8C5C : 27 17 8F                	LD	P3,=RNTAB
+     790/8C5F :                         RG1:
+     791/8C5F : 48                      	LD	E,A
+     792/8C60 : E7 01                   	XOR	A,@1,P3
+     793/8C62 : 6C 09                   	BZ	RG2		; Character match
+     794/8C64 : C3 00                   	LD	A,0,P3
+     795/8C66 : 6C 79                   	BZ	RGE		; Found end mark
+     796/8C68 : C7 05                   	LD	A,@5,P3
+     797/8C6A : 40                      	LD	A,E
+     798/8C6B : 74 F2                   	BRA	RG1
+     799/8C6D :                         RG2:
+     800/8C6D : C7 01                   	LD	A,@1,P3
+     801/8C6F : 48                      	LD	E,A
+     802/8C70 : FC 0F                   	SUB	A,=0x0F		; Link code
+     803/8C72 : 7C 0C                   	BNZ	RG3
+     804/8C74 :                         	;; Next table
+     805/8C74 : 83 00                   	LD	EA,0,P3
+     806/8C76 : 47                      	LD	P3,EA
+     807/8C77 : C6 01                   	LD	A,@1,P2
+     808/8C79 : C2 00                   	LD	A,0,P2
+     809/8C7B : 20 E9 8D                	JSR	UPPER
+     810/8C7E : 74 DF                   	BRA	RG1
+     811/8C80 :                         RG3:
+     812/8C80 : 40                      	LD	A,E
+     813/8C81 : 6C 5E                   	BZ	RGE		; Found end mark
+     814/8C83 : D4 07                   	AND	A,=0x07
+     815/8C85 : 0A                      	PUSH	A
+     816/8C86 : 87 02                   	LD	EA,@2,P3
+     817/8C88 : 08                      	PUSH	EA		; Reg storage address
+     818/8C89 : 83 00                   	LD	EA,0,P3
+     819/8C8B : 46                      	LD	P2,EA		; Reg name
+     820/8C8C : 20 1D 8D                	JSR	STROUT
+     821/8C8F : C4 3D                   	LD	A,='='
+     822/8C91 : 20 8D 8F                	JSR	CONOUT
+     823/8C94 : C1 02                   	LD	A,2,SP
+     824/8C96 : FC 01                   	SUB	A,=1
+     825/8C98 : 7C 09                   	BNZ	RG4
+     826/8C9A :                         	;; 8 bit register
+     827/8C9A : 5E                      	POP	P2
+     828/8C9B : C2 00                   	LD	A,0,P2
+     829/8C9D : 56                      	PUSH	P2
+     830/8C9E : 20 27 8D                	JSR	HEXOUT2
+     831/8CA1 : 74 0D                   	BRA	RG5
+     832/8CA3 :                         RG4:
+     833/8CA3 :                         	;; 16 bit register
+     834/8CA3 : 5E                      	POP	P2
+     835/8CA4 : 82 00                   	LD	EA,0,P2
+     836/8CA6 : 56                      	PUSH	P2
+     837/8CA7 : 08                      	PUSH	EA
+ AS V1.42 Beta [Bld 265] - Source File unimon_ins8070.asm - Page 16 - 24/03/24 16:23:50
+
+
+     838/8CA8 : 40                      	LD	A,E
+     839/8CA9 : 20 27 8D                	JSR	HEXOUT2
+     840/8CAC : 3A                      	POP	EA
+     841/8CAD : 20 27 8D                	JSR	HEXOUT2
+     842/8CB0 :                         RG5:
+     843/8CB0 : C4 20                   	LD	A,=' '
+     844/8CB2 : 20 8D 8F                	JSR	CONOUT
+     845/8CB5 : 27 C0 7F                	LD	P3,=WORK
+     846/8CB8 : 20 83 8D                	JSR	GETLIN
+     847/8CBB : 26 C0 7F                	LD	P2,=WORK_INBUF
+     848/8CBE : 20 E0 8D                	JSR	SKIPSP
+     849/8CC1 : 20 FB 8D                	JSR	RDHEX
+     850/8CC4 : C3 1C                   	LD 	A,W_CNT,P3
+     851/8CC6 : 6C 16                   	BZ	RGR
+     852/8CC8 : C1 02                   	LD	A,2,SP
+     853/8CCA : FC 01                   	SUB	A,=1
+     854/8CCC : 7C 07                   	BNZ	RG6
+     855/8CCE :                         	;; 8 bit register
+     856/8CCE : 5E                      	POP	P2
+     857/8CCF : C3 1A                   	LD	A,W_VAL,P3
+     858/8CD1 : CA 00                   	ST	A,0,P2
+     859/8CD3 : 74 05                   	BRA	RG7
+     860/8CD5 :                         RG6:
+     861/8CD5 :                         	;; 16 bit register
+     862/8CD5 : 5E                      	POP	P2
+     863/8CD6 : 83 1A                   	LD	EA,W_VAL,P3
+     864/8CD8 : 8A 00                   	ST	EA,0,P2
+     865/8CDA :                         RG7:
+     866/8CDA : 38                      	POP	A
+     867/8CDB : 24 2E 88                	JMP	WSTART
+     868/8CDE :                         RGR:
+     869/8CDE : 5E                      	POP	P2
+     870/8CDF : 74 F9                   	BRA	RG7
+     871/8CE1 :                         RGE:
+     872/8CE1 : 27 C0 7F                	LD	P3,=WORK
+     873/8CE4 : 24 78 88                	JMP	ERR
+     874/8CE7 :                         	
+     875/8CE7 :                         RDUMP:
+     876/8CE7 : 26 CE 8E                	LD	P2,=RDTAB
+     877/8CEA :                         RD0:
+     878/8CEA : 86 02                   	LD	EA,@2,P2
+     879/8CEC : 09                      	LD	T,EA
+     880/8CED : 58                      	OR	A,E
+     881/8CEE : 6C 2B                   	BZ	RDR
+     882/8CF0 : 56                      	PUSH	P2
+     883/8CF1 : 0B                      	LD	EA,T
+     884/8CF2 : 46                      	LD	P2,EA
+     885/8CF3 : 20 1D 8D                	JSR	STROUT
+     886/8CF6 : 5E                      	POP	P2
+     887/8CF7 : A6 02                   	LD	T,@2,P2
+     888/8CF9 : C6 01                   	LD	A,@1,P2
+     889/8CFB : FC 01                   	SUB	A,=1
+     890/8CFD : 7C 0B                   	BNZ	RD1
+     891/8CFF :                         	;; 1 byte
+     892/8CFF : 0B                      	LD	EA,T
+     893/8D00 : 56                      	PUSH	P2
+     894/8D01 : 46                      	LD	P2,EA
+     895/8D02 : C2 00                   	LD	A,0,P2
+     896/8D04 : 5E                      	POP	P2
+     897/8D05 : 20 27 8D                	JSR	HEXOUT2
+ AS V1.42 Beta [Bld 265] - Source File unimon_ins8070.asm - Page 17 - 24/03/24 16:23:50
+
+
+     898/8D08 : 74 E0                   	BRA	RD0
+     899/8D0A :                         RD1:
+     900/8D0A :                         	;; 2 byte
+     901/8D0A : 0B                      	LD	EA,T
+     902/8D0B : 56                      	PUSH	P2
+     903/8D0C : 46                      	LD	P2,EA
+     904/8D0D : A2 00                   	LD	T,0,P2
+     905/8D0F : 5E                      	POP	P2
+     906/8D10 : 0B                      	LD	EA,T
+     907/8D11 : 40                      	LD	A,E
+     908/8D12 : 20 27 8D                	JSR	HEXOUT2
+     909/8D15 : 0B                      	LD	EA,T
+     910/8D16 : 20 27 8D                	JSR	HEXOUT2
+     911/8D19 : 74 CF                   	BRA	RD0
+     912/8D1B :                         RDR:
+     913/8D1B : 24 79 8D                	JMP	CRLF
+     914/8D1E :                         
+     915/8D1E : [779]                   	ENDIF			; USE_REGCMD
+     916/8D1E :                         
+     917/8D1E :                         ;;; Other support routines
+     918/8D1E :                         
+     919/8D1E :                         STROUT:
+     920/8D1E : C6 01                   	LD	A,@+1,P2
+     921/8D20 : 6C 05                   	BZ	STROR
+     922/8D22 : 20 8D 8F                	JSR	CONOUT
+     923/8D25 : 74 F7                   	BRA	STROUT
+     924/8D27 :                         STROR:
+     925/8D27 : 5C                      	RET
+     926/8D28 :                         
+     927/8D28 :                         HEXOUT2:
+     928/8D28 : 0A                      	PUSH	A
+     929/8D29 : 3C                      	SR	A
+     930/8D2A : 3C                      	SR	A
+     931/8D2B : 3C                      	SR	A
+     932/8D2C : 3C                      	SR	A
+     933/8D2D : 20 30 8D                	JSR	HEXOUT1
+     934/8D30 : 38                      	POP	A
+     935/8D31 :                         HEXOUT1:
+     936/8D31 : 08                      	PUSH	EA
+     937/8D32 : D4 0F                   	AND	A,=0x0F
+     938/8D34 : F4 30                   	ADD	A,='0'
+     939/8D36 : 48                      	LD	E,A
+     940/8D37 : FC 3A                   	SUB	A,='9'+1
+     941/8D39 : 64 06                   	BP	HEXOUT0
+     942/8D3B : 40                      	LD	A,E
+     943/8D3C :                         HEXOUTE:
+     944/8D3C : 20 8D 8F                	JSR	CONOUT
+     945/8D3F : 3A                      	POP	EA
+     946/8D40 : 5C                      	RET
+     947/8D41 :                         HEXOUT0:
+     948/8D41 : 40                      	LD	A,E
+     949/8D42 : F4 07                   	ADD	A,='A'-'9'-1
+     950/8D44 : 74 F6                   	BRA	HEXOUTE
+     951/8D46 :                         
+     952/8D46 :                         HEXIN:
+     953/8D46 : C4 00                   	LD	A,=0
+     954/8D48 : 20 4E 8D                	JSR	HI0
+     955/8D4B : 0E                      	SL	A
+     956/8D4C : 0E                      	SL	A
+     957/8D4D : 0E                      	SL	A
+ AS V1.42 Beta [Bld 265] - Source File unimon_ins8070.asm - Page 18 - 24/03/24 16:23:50
+
+
+     958/8D4E : 0E                      	SL	A
+     959/8D4F :                         HI0:
+     960/8D4F : 08                      	PUSH	EA
+     961/8D50 : 20 7E 8F                	JSR	CONIN
+     962/8D53 : 20 E9 8D                	JSR	UPPER
+     963/8D56 : 48                      	LD	E,A
+     964/8D57 : FC 47                   	SUB	A,='F'+1
+     965/8D59 : 64 0F                   	BP	HIR
+     966/8D5B : 40                      	LD	A,E
+     967/8D5C : FC 41                   	SUB	A,='A'
+     968/8D5E : 64 11                   	BP	HI2
+     969/8D60 : 40                      	LD	A,E
+     970/8D61 : FC 3A                   	SUB	A,='9'+1
+     971/8D63 : 64 05                   	BP	HIR
+     972/8D65 : 40                      	LD	A,E
+     973/8D66 : FC 30                   	SUB	A,='0'
+     974/8D68 : 64 02                   	BP	HI1
+     975/8D6A :                         HIR:
+     976/8D6A : 3A                      	POP	EA
+     977/8D6B : 5C                      	RET
+     978/8D6C :                         HI1:
+     979/8D6C : 40                      	LD	A,E
+     980/8D6D : FC 30                   	SUB	A,='0'
+     981/8D6F : 74 03                   	BRA	HI3
+     982/8D71 :                         HI2:
+     983/8D71 : 40                      	LD	A,E
+     984/8D72 : FC 37                   	SUB	A,='A'-10
+     985/8D74 :                         HI3:
+     986/8D74 : D9 00                   	OR	A,0,SP
+     987/8D76 : C9 00                   	ST	A,0,SP
+     988/8D78 : 74 F0                   	BRA	HIR
+     989/8D7A :                         	
+     990/8D7A :                         CRLF:
+     991/8D7A : C4 0D                   	LD	A,=CR
+     992/8D7C : 20 8D 8F                	JSR	CONOUT
+     993/8D7F : C4 0A                   	LD	A,=LF
+     994/8D81 : 24 8D 8F                	JMP	CONOUT
+     995/8D84 :                         
+     996/8D84 :                         GETLIN:
+     997/8D84 : 26 C0 7F                	LD	P2,=WORK_INBUF
+     998/8D87 : C4 00                   	LD	A,=0
+     999/8D89 : CB 1C                   	ST	A,W_CNT,P3
+    1000/8D8B :                         GL0:
+    1001/8D8B : 20 7E 8F                	JSR	CONIN
+    1002/8D8E : 48                      	LD	E,A
+    1003/8D8F : FC 0D                   	SUB	A,=CR
+    1004/8D91 : 6C 05                   	BZ	GLE
+    1005/8D93 : 40                      	LD	A,E
+    1006/8D94 : FC 0A                   	SUB	A,=LF
+    1007/8D96 : 7C 08                   	BNZ	GL1
+    1008/8D98 :                         GLE:
+    1009/8D98 : 20 79 8D                	JSR	CRLF
+    1010/8D9B : C4 00                   	LD	A,=0
+    1011/8D9D : CA 00                   	ST	A,0,P2
+    1012/8D9F : 5C                      	RET
+    1013/8DA0 :                         GL1:	
+    1014/8DA0 : 40                      	LD	A,E
+    1015/8DA1 : FC 08                   	SUB	A,=BS
+    1016/8DA3 : 6C 05                   	BZ	GLB
+    1017/8DA5 : 40                      	LD	A,E
+ AS V1.42 Beta [Bld 265] - Source File unimon_ins8070.asm - Page 19 - 24/03/24 16:23:50
+
+
+    1018/8DA6 : FC 7F                   	SUB	A,=DEL
+    1019/8DA8 : 7C 1B                   	BNZ	GL2
+    1020/8DAA :                         GLB:
+    1021/8DAA : C3 1C                   	LD	A,W_CNT,P3
+    1022/8DAC : 6C DD                   	BZ	GL0
+    1023/8DAE : FC 01                   	SUB	A,=1
+    1024/8DB0 : CB 1C                   	ST	A,W_CNT,P3
+    1025/8DB2 : C6 FF                   	LD	A,@-1,P2	; DEC P2
+    1026/8DB4 : C4 08                   	LD	A,=BS
+    1027/8DB6 : 20 8D 8F                	JSR	CONOUT
+    1028/8DB9 : C4 20                   	LD	A,=' '
+    1029/8DBB : 20 8D 8F                	JSR	CONOUT
+    1030/8DBE : C4 08                   	LD	A,=BS
+    1031/8DC0 : 20 8D 8F                	JSR	CONOUT
+    1032/8DC3 : 74 C6                   	BRA	GL0
+    1033/8DC5 :                         GL2:
+    1034/8DC5 : 40                      	LD	A,E
+    1035/8DC6 : FC 20                   	SUB	A,=' '
+    1036/8DC8 : 64 02                   	BP	GL3
+    1037/8DCA : 74 BF                   	BRA	GL0		; 0x00-0x1F
+    1038/8DCC :                         GL3:
+    1039/8DCC : 40                      	LD	A,E
+    1040/8DCD : FC 7F                   	SUB	A,=0x7F
+    1041/8DCF : 64 BA                   	BP	GL0		; 0x7F-0xFF
+    1042/8DD1 : C3 1C                   	LD	A,W_CNT,P3
+    1043/8DD3 : FC 0F                   	SUB	A,=BUFLEN-1
+    1044/8DD5 : 64 B4                   	BP	GL0
+    1045/8DD7 : 93 1C                   	ILD	A,W_CNT,P3	; INC CNT
+    1046/8DD9 : 40                      	LD	A,E
+    1047/8DDA : CE 01                   	ST	A,@1,P2
+    1048/8DDC : 20 8D 8F                	JSR	CONOUT
+    1049/8DDF : 74 AA                   	BRA	GL0
+    1050/8DE1 :                         
+    1051/8DE1 :                         SKIPSP:
+    1052/8DE1 : C6 01                   	LD	A,@1,P2
+    1053/8DE3 : FC 20                   	SUB	A,=' '
+    1054/8DE5 : 6C FA                   	BZ	SKIPSP
+    1055/8DE7 : C6 FF                   	LD	A,@-1,P2
+    1056/8DE9 : 5C                      	RET
+    1057/8DEA :                         
+    1058/8DEA :                         UPPER:
+    1059/8DEA : 48                      	LD	E,A
+    1060/8DEB : FC 61                   	SUB	A,='a'
+    1061/8DED : 64 02                   	BP	UP0
+    1062/8DEF : 74 09                   	BRA	UPR
+    1063/8DF1 :                         UP0:
+    1064/8DF1 : 40                      	LD	A,E
+    1065/8DF2 : FC 7B                   	SUB	A,='z'+1
+    1066/8DF4 : 64 04                   	BP	UPR
+    1067/8DF6 : 40                      	LD	A,E
+    1068/8DF7 : F4 E0                   	ADD	A,='A'-'a'
+    1069/8DF9 : 5C                      	RET
+    1070/8DFA :                         UPR:
+    1071/8DFA : 40                      	LD	A,E
+    1072/8DFB : 5C                      	RET
+    1073/8DFC :                         
+    1074/8DFC :                         RDHEX:
+    1075/8DFC : 84 00 00                	LD	EA,=0
+    1076/8DFF : CB 1C                   	ST	A,W_CNT,P3
+    1077/8E01 : 8B 1A                   	ST	EA,W_VAL,P3
+ AS V1.42 Beta [Bld 265] - Source File unimon_ins8070.asm - Page 20 - 24/03/24 16:23:50
+
+
+    1078/8E03 :                         RH0:
+    1079/8E03 : C6 01                   	LD	A,@1,P2
+    1080/8E05 : 20 E9 8D                	JSR	UPPER
+    1081/8E08 : 48                      	LD	E,A
+    1082/8E09 : FC 30                   	SUB	A,='0'
+    1083/8E0B : 64 02                   	BP	RH01
+    1084/8E0D : 74 29                   	BRA	RHE
+    1085/8E0F :                         RH01:
+    1086/8E0F : 40                      	LD	A,E
+    1087/8E10 : FC 3A                   	SUB	A,='9'+1
+    1088/8E12 : 64 03                   	BP	RH02
+    1089/8E14 : 40                      	LD	A,E
+    1090/8E15 : 74 0F                   	BRA	RH1
+    1091/8E17 :                         RH02:
+    1092/8E17 : 40                      	LD	A,E
+    1093/8E18 : FC 41                   	SUB	A,='A'
+    1094/8E1A : 64 02                   	BP	RH03
+    1095/8E1C : 74 1A                   	BRA	RHE
+    1096/8E1E :                         RH03:
+    1097/8E1E : 40                      	LD	A,E
+    1098/8E1F : FC 47                   	SUB	A,='F'+1
+    1099/8E21 : 64 15                   	BP	RHE
+    1100/8E23 : 40                      	LD	A,E
+    1101/8E24 : FC 07                   	SUB	A,='A'-'9'-1
+    1102/8E26 :                         RH1:
+    1103/8E26 : FC 30                   	SUB	A,='0'
+    1104/8E28 : 0A                      	PUSH	A
+    1105/8E29 : 83 1A                   	LD	EA,W_VAL,P3
+    1106/8E2B : 0F                      	SL	EA
+    1107/8E2C : 0F                      	SL	EA
+    1108/8E2D : 0F                      	SL	EA
+    1109/8E2E : 0F                      	SL	EA
+    1110/8E2F : D9 00                   	OR	A,0,SP
+    1111/8E31 : 8B 1A                   	ST	EA,W_VAL,P3
+    1112/8E33 : 38                      	POP	A		; Drop
+    1113/8E34 : 93 1C                   	ILD	A,W_CNT,P3
+    1114/8E36 : 74 CB                   	BRA	RH0
+    1115/8E38 :                         RHE:
+    1116/8E38 : C6 FF                   	LD	A,@-1,P2	; DEC P2
+    1117/8E3A : 5C                      	RET
+    1118/8E3B :                         
+    1119/8E3B :                         DUMMY:
+    1120/8E3B : 5C                      	RET
+    1121/8E3C :                         
+    1122/8E3C :                         ;;;  BREAK
+    1123/8E3C :                         
+    1124/8E3C :                         BREAK:
+    1125/8E3C : =>TRUE                  	IF USE_REGCMD
+    1126/8E3C :                         
+    1127/8E3C : 08                      	PUSH	EA
+    1128/8E3D : 23 C0 7F                	PLI	P3,=WORK
+    1129/8E40 : 06                      	LD	A,S
+    1130/8E41 : CB 23                   	ST	A,W_REGS,P3
+    1131/8E43 : 0B                      	LD	EA,T
+    1132/8E44 : 8B 21                   	ST	EA,W_REGT,P3
+    1133/8E46 : 32                      	LD	EA,P2
+    1134/8E47 : 8B 28                   	ST	EA,W_REGP2,P3
+    1135/8E49 : 3A                      	POP	EA
+    1136/8E4A : 8B 2A                   	ST	EA,W_REGP3,P3
+    1137/8E4C : 3A                      	POP	EA
+ AS V1.42 Beta [Bld 265] - Source File unimon_ins8070.asm - Page 21 - 24/03/24 16:23:50
+
+
+    1138/8E4D : 8B 1F                   	ST	EA,W_REGEA,P3
+    1139/8E4F : 3A                      	POP	EA
+    1140/8E50 : 8B 24                   	ST	EA,W_REGPC,P3
+    1141/8E52 : 31                      	LD	EA,SP
+    1142/8E53 : 8B 26                   	ST	EA,W_REGSP,P3
+    1143/8E55 :                         
+    1144/8E55 : 26 C6 8E                	LD	P2,=BRKMSG
+    1145/8E58 : 20 1D 8D                	JSR	STROUT
+    1146/8E5B : 20 E6 8C                	JSR	RDUMP
+    1147/8E5E : 24 2E 88                	JMP	WSTART
+    1148/8E61 :                         
+    1149/8E61 : =>FALSE                 	ELSE			; USE_REGCMD
+    1150/8E61 :                         
+    1151/8E61 :                         	RET
+    1152/8E61 :                         
+    1153/8E61 : [1125]                  	ENDIF			; USE_REGCMD
+    1154/8E61 :                         
+    1155/8E61 :                         ;;; Data area
+    1156/8E61 :                         
+    1157/8E61 :                         OPNMSG:
+    1158/8E61 : 0D 0A 55 6E 69 76 65 72 	DB	CR,LF,"Universal Monitor INS8070",CR,LF,0x00
+         8E69 : 73 61 6C 20 4D 6F 6E 69
+         8E71 : 74 6F 72 20 49 4E 53 38
+         8E79 : 30 37 30 0D 0A 00      
+    1159/8E7F :                         PROMPT:
+    1160/8E7F : 5D 20 00                	DB	"] ",0x00
+    1161/8E82 :                         
+    1162/8E82 :                         IHEMSG:
+    1163/8E82 : 45 72 72 6F 72 20 69 68 	DB	"Error ihex",CR,LF,0x00
+         8E8A : 65 78 0D 0A 00         
+    1164/8E8F :                         SHEMSG:
+    1165/8E8F : 45 72 72 6F 72 20 73 72 	DB	"Error srec",CR,LF,0x00
+         8E97 : 65 63 0D 0A 00         
+    1166/8E9C :                         ERRMSG:
+    1167/8E9C : 45 72 72 6F 72 0D 0A 00 	DB	"Error",CR,LF,0x00
+    1168/8EA4 :                         
+    1169/8EA4 :                         DSEP0:
+    1170/8EA4 : 20 3A 00                	DB	" :",0x00
+    1171/8EA7 :                         DSEP1:
+    1172/8EA7 : 20 3A 20 00             	DB	" : ",0x00
+    1173/8EAB :                         IHEXER:
+    1174/8EAB : 3A 30 30 30 30 30 30 30         DB	":00000001FF",CR,LF,0x00
+         8EB3 : 31 46 46 0D 0A 00      
+    1175/8EB9 :                         SRECER:
+    1176/8EB9 : 53 39 30 33 30 30 30 30         DB	"S9030000FC",CR,LF,0x00
+         8EC1 : 46 43 0D 0A 00         
+    1177/8EC6 :                         
+    1178/8EC6 :                         BRKMSG:
+    1179/8EC6 : 42 52 45 41 4B 0D 0A 00 	DB	"BREAK",CR,LF,0x00
+    1180/8ECE :                         
+    1181/8ECE : =>TRUE                  	IF USE_REGCMD
+    1182/8ECE :                         
+    1183/8ECE :                         RDTAB:
+    1184/8ECE : F6 8E DF 7F             	DW	RDSEA,  WORK_REGEA
+    1185/8ED2 : 02                      	DB	2
+    1186/8ED3 : FA 8E E1 7F             	DW	RDST,   WORK_REGT
+    1187/8ED7 : 02                      	DB	2
+    1188/8ED8 : FE 8E E3 7F             	DW	RDSS,   WORK_REGS
+    1189/8EDC : 01                      	DB	1
+    1190/8EDD : 02 8F E4 7F             	DW	RDSPC,  WORK_REGPC
+ AS V1.42 Beta [Bld 265] - Source File unimon_ins8070.asm - Page 22 - 24/03/24 16:23:50
+
+
+    1191/8EE1 : 02                      	DB	2
+    1192/8EE2 : 08 8F E6 7F             	DW	RDSSP,  WORK_REGSP
+    1193/8EE6 : 02                      	DB	2
+    1194/8EE7 : 0D 8F E8 7F             	DW	RDSP2,  WORK_REGP2
+    1195/8EEB : 02                      	DB	2
+    1196/8EEC : 12 8F EA 7F             	DW	RDSP3,  WORK_REGP3
+    1197/8EF0 : 02                      	DB	2
+    1198/8EF1 :                         
+    1199/8EF1 : 00 00 00 00             	DW	0x0000, 0x0000
+    1200/8EF5 : 00                      	DB	0
+    1201/8EF6 :                         
+    1202/8EF6 : 45 41 3D 00             RDSEA:	DB	"EA=",0x00
+    1203/8EFA : 20 54 3D 00             RDST:	DB	" T=",0x00
+    1204/8EFE : 20 53 3D 00             RDSS:	DB	" S=",0x00
+    1205/8F02 : 20 20 50 43 3D 00       RDSPC:	DB	"  PC=",0x00
+    1206/8F08 : 20 53 50 3D 00          RDSSP:	DB	" SP=",0x00
+    1207/8F0D : 20 50 32 3D 00          RDSP2:	DB	" P2=",0x00
+    1208/8F12 : 20 50 33 3D 00          RDSP3:	DB	" P3=",0x00
+    1209/8F17 :                         
+    1210/8F17 :                         RNTAB:
+    1211/8F17 : 41 01                   	DB	'A',1		; "A"
+    1212/8F19 : DF 7F 67 8F             	DW	WORK_REGEA,RNA
+    1213/8F1D : 45 0F                   	DB	'E',0x0F	; "E?"
+    1214/8F1F : 37 8F 00 00             	DW	RNTABE,0
+    1215/8F23 : 50 0F                   	DB	'P',0x0F	; "P?"
+    1216/8F25 : 45 8F 00 00             	DW	RNTABP,0
+    1217/8F29 : 53 0F                   	DB	'S',0x0F	; "S?"
+    1218/8F2B : 59 8F 00 00             	DW	RNTABS,0
+    1219/8F2F : 54 02                   	DB	'T',2		; "A"
+    1220/8F31 : E1 7F 7C 8F             	DW	WORK_REGT,RNT
+    1221/8F35 :                         
+    1222/8F35 : 00 00                   	DB	0x00,0
+    1223/8F37 :                         
+    1224/8F37 :                         RNTABE:
+    1225/8F37 : 00 01                   	DB	0x00,1		; "E"
+    1226/8F39 : E0 7F 69 8F             	DW	WORK_REGEA+1,RNE
+    1227/8F3D : 41 02                   	DB	'A',2		; "EA"
+    1228/8F3F : DF 7F 6B 8F             	DW	WORK_REGEA,RNEA
+    1229/8F43 :                         
+    1230/8F43 : 00 00                   	DB	0x00,0
+    1231/8F45 :                         
+    1232/8F45 :                         RNTABP:
+    1233/8F45 : 32 02                   	DB	'2',2		; "P2"
+    1234/8F47 : E8 7F 6E 8F             	DW	WORK_REGP2,RNP2
+    1235/8F4B : 33 02                   	DB	'3',2		; "P3"
+    1236/8F4D : EA 7F 71 8F             	DW	WORK_REGP3,RNP3
+    1237/8F51 : 43 02                   	DB	'C',2		; "PC"
+    1238/8F53 : E4 7F 74 8F             	DW	WORK_REGPC,RNPC
+    1239/8F57 :                         
+    1240/8F57 : 00 00                   	DB	0x00,0
+    1241/8F59 :                         
+    1242/8F59 :                         RNTABS:
+    1243/8F59 : 00 01                   	DB	0x00,1		; "S"
+    1244/8F5B : E3 7F 77 8F             	DW	WORK_REGS,RNS
+    1245/8F5F : 50 02                   	DB	'P',2		; "SP"
+    1246/8F61 : E6 7F 79 8F             	DW	WORK_REGSP,RNSP
+    1247/8F65 :                         
+    1248/8F65 : 00 00                   	DB	0x00,0
+    1249/8F67 :                         
+    1250/8F67 : 41 00                   RNA:	DB	"A",0x00
+ AS V1.42 Beta [Bld 265] - Source File unimon_ins8070.asm - Page 23 - 24/03/24 16:23:50
+
+
+    1251/8F69 : 45 00                   RNE:	DB	"E",0x00
+    1252/8F6B : 45 41 00                RNEA:	DB	"EA",0x00
+    1253/8F6E : 50 32 00                RNP2:	DB	"P2",0x00
+    1254/8F71 : 50 33 00                RNP3:	DB	"P3",0x00
+    1255/8F74 : 50 43 00                RNPC:	DB	"PC",0x00
+    1256/8F77 : 53 00                   RNS:	DB	"S",0x00
+    1257/8F79 : 53 50 00                RNSP:	DB	"SP",0x00
+    1258/8F7C : 54 00                   RNT:	DB	"T",0x00
+    1259/8F7E :                         
+    1260/8F7E : [1181]                  	ENDIF			; USE_REGCMD
+    1261/8F7E :                         
+    1262/8F7E :                         ;;; Console drivers
+    1263/8F7E :                         
+    1264/8F7E : =>FALSE                 	IF USE_DEV_EMILY
+    1265/8F7E :                         	INCLUDE	"dev/dev_emily.asm"
+    1266/8F7E : [1264]                  	ENDIF
+    1267/8F7E :                         
+    1268/8F7E : =>TRUE                  	IF USE_DEV_INS8073
+    1269/8F7E :                         	INCLUDE	"dev/dev_ins8073.asm"
+(1)    1/8F7E :                         ;;;
+(1)    2/8F7E :                         ;;;	INS8073 Console Driver  (Use routines in NSC Tiny BASIC ROM)
+(1)    3/8F7E :                         ;;;
+(1)    4/8F7E :                         
+(1)    5/8F7E :                         INIT:
+(1)    6/8F7E : 5C                      	RET
+(1)    7/8F7F :                         
+(1)    8/8F7F :                         CONIN:
+(1)    9/8F7F : 20 2A 09                	JSR	0x092B
+(1)   10/8F82 : 6C FB                   	BZ	CONIN
+(1)   11/8F84 :                         
+(1)   12/8F84 : 23 EC 7F                	PLI	P3,=DEVMEM
+(1)   13/8F87 : CB 00                   	ST	A,0,P3
+(1)   14/8F89 : 5F                      	POP	P3
+(1)   15/8F8A :                         
+(1)   16/8F8A : 5C                      	RET
+(1)   17/8F8B :                         
+(1)   18/8F8B :                         CONST:
+(1)   19/8F8B : C4 FF                   	LD	A,=0xFF
+(1)   20/8F8D : 5C                      	RET
+(1)   21/8F8E :                         
+(1)   22/8F8E :                         CONOUT:
+(1)   23/8F8E : 23 EC 7F                	PLI	P3,=DEVMEM
+(1)   24/8F91 : 0A                      	PUSH	A
+(1)   25/8F92 : FB 00                   	SUB	A,0,P3
+(1)   26/8F94 : 7C 03                   	BNZ	CO0
+(1)   27/8F96 : 38                      	POP	A
+(1)   28/8F97 : 74 02                   	BRA	CO1
+(1)   29/8F99 :                         CO0:
+(1)   30/8F99 : 38                      	POP	A
+(1)   31/8F9A : 17                      	CALL	7
+(1)   32/8F9B :                         CO1:
+(1)   33/8F9B : C4 00                   	LD	A,=0
+(1)   34/8F9D : CB 00                   	ST	A,0,P3
+(1)   35/8F9F : 5F                      	POP	P3
+(1)   36/8FA0 :                         
+(1)   37/8FA0 : 5C                      	RET
+(1)   38/8FA1 :                         
+    1270/8FA1 : [1268]                  	ENDIF
+    1271/8FA1 :                         
+    1272/8FA1 :                         ;;; Entry point from NSC Tiny BASIC
+ AS V1.42 Beta [Bld 265] - Source File unimon_ins8070.asm - Page 24 - 24/03/24 16:23:50
+
+
+    1273/8FA1 :                         
+    1274/8FA1 : =>FALSE                 	IF CONSOLE_FOR_BASIC
+    1275/8FA1 :                         
+    1276/8FA1 :                         BAS_CONIN:
+    1277/8FA1 :                         	JSR	CONST
+    1278/8FA1 :                         	BZ	BCIN0
+    1279/8FA1 :                         
+    1280/8FA1 :                         	JSR	CONIN
+    1281/8FA1 :                         	AND	A,=0x7F
+    1282/8FA1 :                         	PUSH	A
+    1283/8FA1 :                         	JSR	CONOUT
+    1284/8FA1 :                         	POP	A
+    1285/8FA1 :                         BCIN0:
+    1286/8FA1 :                         	RET
+    1287/8FA1 :                         
+    1288/8FA1 :                         BAS_CONOUT:
+    1289/8FA1 :                         	AND	A,=0x7F
+    1290/8FA1 :                         	JMP	CONOUT
+    1291/8FA1 :                         
+    1292/8FA1 :                         	ORG	0xFD00
+    1293/8FA1 :                         
+    1294/8FA1 :                         	DB	0x00		; FD00
+    1295/8FA1 :                         	DW	BAS_CONIN	; FD01,FD02
+    1296/8FA1 :                         	DW	BAS_CONOUT	; FD03,FD04
+    1297/8FA1 :                         
+    1298/8FA1 : [1274]                  	ENDIF
+    1299/8FA1 :                         
+    1300/8FA1 : =>TRUE                  	IF USE_DEV_INS8073
+    1301/8FA1 :                         
+    1302/FD00 :                         	ORG	0xFD00
+    1303/FD00 :                         
+    1304/FD00 : 80                      	DB	0x80		; FD00
+    1305/FD01 :                         
+    1306/FD01 : [1300]                  	ENDIF
+    1307/FD01 :                         
+    1308/FD01 :                         ;;;
+    1309/FD01 :                         ;;; RAM area
+    1310/FD01 :                         ;;;
+    1311/FD01 :                         
+    1312/FD01 :                         	;; Work area
+    1313/FD01 :                         
+    1314/7FC0 :                         	ORG	WORK_B
+    1315/7FC0 :                         
+    1316/   0 :                         W	STRUCT	NOEXTNAMES
+    1317/   0 :                         	
+    1318/   0 :                         INBUF:	DS	BUFLEN		; Line input buffer
+    1319/  10 :                         DSADDR:	DS	2		; Dump start address
+    1320/  12 :                         DEADDR:	DS	2		; Dump end address
+    1321/  14 :                         DSTATE:	DS	1		; Dump state
+    1322/  15 :                         GADDR:	DS	2		; Go address
+    1323/  17 :                         SADDR:	DS	2		; Set address
+    1324/  19 :                         HEXMOD:	DS	1		; HEX file mode
+    1325/  1A :                         
+    1326/  1A :                         VAL:	DS	2		; Generic 16bit value
+    1327/  1C :                         CNT:	DS	1		; Generic Counter
+    1328/  1D :                         SUM:	DS	1		; Checksum
+    1329/  1E :                         RECTYP:	DS	1		; Record type
+    1330/  1F :                         
+    1331/  1F : =>TRUE                  	IF USE_REGCMD
+    1332/  1F :                         
+ AS V1.42 Beta [Bld 265] - Source File unimon_ins8070.asm - Page 25 - 24/03/24 16:23:50
+
+
+    1333/  1F :                         REGEA:	DS	2
+    1334/  21 :                         REGT:	DS	2
+    1335/  23 :                         REGS:	DS	1
+    1336/  24 :                         REGPC:	DS	2
+    1337/  26 :                         REGSP:	DS	2
+    1338/  28 :                         REGP2:	DS	2
+    1339/  2A :                         REGP3:	DS	2
+    1340/  2C :                         
+    1341/  2C : [1331]                  	ENDIF			; USE_REGCMD
+    1342/  2C :                         
+    1343/7FC0 : =0x2C                   W	ENDSTRUCT
+    1344/7FC0 :                         
+    1345/7FC0 : (STRUCT)                WORK	W
+    1346/7FEC :                         
+    1347/7FEC : =>DEFINED               	IFDEF MEMREQ
+    1348/7FEC :                         DEVMEM:	DS	MEMREQ
+    1349/7FED : [1347]                  	ENDIF
+    1350/7FED :                         
+    1351/7FED :                         	END
+ AS V1.42 Beta [Bld 265] - Source File unimon_ins8070.asm - Page 26 - 24/03/24 16:23:50
+
+
+  Symbol Table (* = unused):
+  --------------------------
+
+*ARCHITECTURE :                                      "x86_64-unknown-linux" - |
+*BREAK :                       8E3C C |  BRKMSG :                      8EC6 C |
+ BS :                             8 - |  BUFLEN :                        10 - |
+*CASESENSITIVE :                  0 - |  CO0 :                         8F99 C |
+ CO1 :                         8F9B C |  CONIN :                       8F7F C |
+ CONOUT :                      8F8E C |  CONSOLE_FOR_BASIC :              0 - |
+ CONST :                       8F8B C | *CONSTPI :        3.141592653589793 - |
+ CR :                             D - |  CRLF :                        8D7A C |
+ CSTART :                      8804 C | *DATE :                  "24/03/24" - |
+ DEL :                           7F - |  DEVMEM :                      7FEC C |
+ DP0 :                         889E C |  DP00 :                        8895 C |
+ DP1 :                         88B1 C |  DP1E :                        88CD C |
+ DPB :                         8947 C |  DPB0 :                        8958 C |
+ DPB1 :                        8974 C |  DPB2 :                        8978 C |
+ DPBE :                        899D C |  DPL :                         88FB C |
+ DPL0 :                        8915 C |  DPL1 :                        892A C |
+ DPL2 :                        8930 C |  DPL3 :                        8934 C |
+ DPL4 :                        893C C |  DPM :                         88D0 C |
+ DPM0 :                        88D9 C |  DPM01 :                       88EB C |
+ DPM1 :                        88F2 C |  DSEP0 :                       8EA4 C |
+ DSEP1 :                       8EA7 C | *DUMMY :                       8E3B C |
+ DUMP :                        8882 C |  ERR :                         8879 C |
+ ERRMSG :                      8E9C C | *FALSE :                          0 - |
+ FOR_INS8073 :                    1 - | *FULLPMMU :                       1 - |
+ G0 :                          89B8 C |  GETLIN :                      8D84 C |
+ GL0 :                         8D8B C |  GL1 :                         8DA0 C |
+ GL2 :                         8DC5 C |  GL3 :                         8DCC C |
+ GLB :                         8DAA C |  GLE :                         8D98 C |
+ GO :                          899E C |  GO0 :                         89B0 C |
+*HAS64 :                          1 - | *HASFPU :                         0 - |
+*HASPMMU :                        0 - |  HEXIN :                       8D46 C |
+ HEXOUT0 :                     8D41 C |  HEXOUT1 :                     8D31 C |
+ HEXOUT2 :                     8D28 C |  HEXOUTE :                     8D3C C |
+ HI0 :                         8D4F C |  HI1 :                         8D6C C |
+ HI2 :                         8D71 C |  HI3 :                         8D74 C |
+ HIR :                         8D6A C |  IHEMSG :                      8E82 C |
+ IHEXER :                      8EAB C |  INIT :                        8F7E C |
+*INSUPMODE :                      0 - |  LF :                             A - |
+ LH0 :                         8A5E C | *LH1 :                         8A69 C |
+ LH2 :                         8A6E C |  LH3 :                         8A78 C |
+ LHE :                         8A7E C |  LHI0 :                        8A81 C |
+ LHI1 :                        8AAF C |  LHI2 :                        8ABE C |
+ LHI3 :                        8AC2 C |  LHIE :                        8AD0 C |
+ LHS0 :                        8AD9 C |  LHS01 :                       8AEC C |
+ LHS02 :                       8AF0 C |  LHS1 :                        8B11 C |
+ LHS2 :                        8B20 C |  LHS3 :                        8B24 C |
+ LHSE :                        8B34 C |  LHSR :                        8B3A C |
+*LISTON :                         1 - |  LOADH :                       8A4F C |
+ M00 :                         884B C |  M01 :                         8853 C |
+ M02 :                         885B C |  M03 :                         8863 C |
+ M04 :                         886B C |  M05 :                         8873 C |
+ M09 :                         8879 C | *MACEXP :                         7 - |
+ MEMREQ :                         1 - | *MOMCPU :                      8070 - |
+*MOMCPUNAME :                "8070" - | *NESTMAX :                      100 - |
+ OPNMSG :                      8E61 C | *PADDING :                        1 - |
+ PROMPT :                      8E7F C |  RAM_B :                       7800 - |
+ RD0 :                         8CEA C |  RD1 :                         8D0A C |
+ AS V1.42 Beta [Bld 265] - Source File unimon_ins8070.asm - Page 27 - 24/03/24 16:23:50
+
+
+ RDHEX :                       8DFC C |  RDR :                         8D1B C |
+ RDSEA :                       8EF6 C |  RDSP2 :                       8F0D C |
+ RDSP3 :                       8F12 C |  RDSPC :                       8F02 C |
+ RDSS :                        8EFE C |  RDSSP :                       8F08 C |
+ RDST :                        8EFA C |  RDTAB :                       8ECE C |
+ RDUMP :                       8CE7 C |  REG :                         8C4C C |
+*RELAXED :                        0 - |  RG0 :                         8C5C C |
+ RG1 :                         8C5F C |  RG2 :                         8C6D C |
+ RG3 :                         8C80 C |  RG4 :                         8CA3 C |
+ RG5 :                         8CB0 C |  RG6 :                         8CD5 C |
+ RG7 :                         8CDA C |  RGE :                         8CE1 C |
+ RGR :                         8CDE C |  RH0 :                         8E03 C |
+ RH01 :                        8E0F C |  RH02 :                        8E17 C |
+ RH03 :                        8E1E C |  RH1 :                         8E26 C |
+ RHE :                         8E38 C |  RNA :                         8F67 C |
+ RNE :                         8F69 C |  RNEA :                        8F6B C |
+ RNP2 :                        8F6E C |  RNP3 :                        8F71 C |
+ RNPC :                        8F74 C |  RNS :                         8F77 C |
+ RNSP :                        8F79 C |  RNT :                         8F7C C |
+ RNTAB :                       8F17 C |  RNTABE :                      8F37 C |
+ RNTABP :                      8F45 C |  RNTABS :                      8F59 C |
+ ROM_B :                       8800 - |  SAVEH :                       8B3D C |
+ SETM :                        89D3 C |  SH0 :                         8B4E C |
+ SH1 :                         8B53 C |  SH2 :                         8B80 C |
+ SH3 :                         8B8B C |  SH4 :                         8BA1 C |
+ SHE :                         8B7D C |  SHEMSG :                      8E8F C |
+ SHEP :                        8B7C C |  SHL :                         8BAA C |
+ SHL0 :                        8BBF C |  SHL1 :                        8BC8 C |
+ SHLI0 :                       8BF3 C |  SHLS :                        8C0C C |
+ SHLS0 :                       8C33 C |  SKIPSP :                      8DE1 C |
+ SM0 :                         89E5 C |  SM1 :                         89ED C |
+ SM2 :                         8A21 C |  SM3 :                         8A2F C |
+ SM4 :                         8A37 C |  SM5 :                         8A41 C |
+ SRECER :                      8EB9 C | *STACK :                       7F00 - |
+ STROR :                       8D27 C |  STROUT :                      8D1E C |
+*TIME :                  "16:23:50" - | *TRUE :                           1 - |
+ UP0 :                         8DF1 C |  UPPER :                       8DEA C |
+ UPR :                         8DFA C |  USE_DEV_EMILY :                  0 - |
+ USE_DEV_INS8073 :                1 - |  USE_REGCMD :                     1 - |
+*VERSION :                     142F - |  WORK :                        7FC0 C |
+ WORK_B :                      7FC0 - | *WORK_CNT :                    7FDC C |
+*WORK_DEADDR :                 7FD2 C | *WORK_DSADDR :                 7FD0 C |
+*WORK_DSTATE :                 7FD4 C | *WORK_GADDR :                  7FD5 C |
+*WORK_HEXMOD :                 7FD9 C |  WORK_INBUF :                  7FC0 C |
+*WORK_RECTYP :                 7FDE C |  WORK_REGEA :                  7FDF C |
+ WORK_REGP2 :                  7FE8 C |  WORK_REGP3 :                  7FEA C |
+ WORK_REGPC :                  7FE4 C |  WORK_REGS :                   7FE3 C |
+ WORK_REGSP :                  7FE6 C |  WORK_REGT :                   7FE1 C |
+*WORK_SADDR :                  7FD7 C | *WORK_SUM :                    7FDD C |
+*WORK_VAL :                    7FDA C |  WSTART :                      882F C |
+ W_CNT :                         1C - |  W_DEADDR :                      12 - |
+ W_DSADDR :                      10 - |  W_DSTATE :                      14 - |
+ W_GADDR :                       15 - |  W_HEXMOD :                      19 - |
+*W_INBUF :                        0 - | *W_LEN :                         2C - |
+ W_RECTYP :                      1E - |  W_REGEA :                       1F - |
+ W_REGP2 :                       28 - |  W_REGP3 :                       2A - |
+ W_REGPC :                       24 - |  W_REGS :                        23 - |
+ W_REGSP :                       26 - |  W_REGT :                        21 - |
+ W_SADDR :                       17 - |  W_SUM :                         1D - |
+ W_VAL :                         1A - |
+ AS V1.42 Beta [Bld 265] - Source File unimon_ins8070.asm - Page 28 - 24/03/24 16:23:50
+
+
+
+    232 symbols
+     36 unused symbols
+
+ AS V1.42 Beta [Bld 265] - Source File unimon_ins8070.asm - Page 29 - 24/03/24 16:23:50
+
+
+  Defined Structures/Unions:
+  --------------------------
+
+W
+  0          INBUF
+ 10          DSADDR
+ 12          DEADDR
+ 14          DSTATE
+ 15          GADDR
+ 17          SADDR
+ 19          HEXMOD
+ 1A          VAL
+ 1C          CNT
+ 1D          SUM
+ 1E          RECTYP
+ 1F          REGEA
+ 21          REGT
+ 23          REGS
+ 24          REGPC
+ 26          REGSP
+ 28          REGP2
+ 2A          REGP3
+1 structure
+ AS V1.42 Beta [Bld 265] - Source File unimon_ins8070.asm - Page 30 - 24/03/24 16:23:50
+
+
+  Defined Functions:
+  ------------------
+
+HIGH                                  | LOW                                  
+
+ AS V1.42 Beta [Bld 265] - Source File unimon_ins8070.asm - Page 31 - 24/03/24 16:23:50
+
+
+  Code Pages:
+  ----------
+
+STANDARD (0 changed characters)
+
+1 code page
+
+0.00 seconds assembly time
+
+   1453 lines source file
+      2 passes
+      0 errors
+      0 warnings
